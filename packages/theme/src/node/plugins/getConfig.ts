@@ -17,28 +17,28 @@ import { getSEOPlugin } from "./seo.js";
 
 import type { PluginConfig } from "@vuepress/core";
 import type {
-  HopeThemeConfig,
-  HopeThemeOptions,
-  HopeThemePluginsOptions,
+  ThemeData,
+  ThemeOptions,
+  PluginsOptions,
 } from "../../shared/index.js";
 
 export const getPluginConfig = (
-  plugins: HopeThemePluginsOptions,
-  themeData: HopeThemeConfig,
+  plugins: PluginsOptions,
+  themeData: ThemeData,
   options: Pick<
-    HopeThemeOptions,
-    "addThis" | "backToTop" | "hostname" | "iconAssets" | "iconPrefix"
+    ThemeOptions,
+    "backToTop" | "hostname" | "hotReload" | "iconAssets" | "iconPrefix"
   >,
   legacy = false
 ): PluginConfig => {
   const pluginConfig = [
-    getComponentsPlugin(plugins.components, options),
+    getComponentsPlugin(options, plugins.components, legacy),
     getActiveHeaderLinksPlugin(plugins.activeHeaderLinks),
     plugins.externalLinkIcon === false ? null : externalLinkIconPlugin(),
     plugins.nprogress === false ? null : nprogressPlugin(),
     plugins.prismjs === false ? null : prismjsPlugin(),
     themeDataPlugin({ themeData }),
-    getBlogPlugin(themeData, plugins.blog),
+    getBlogPlugin(themeData, plugins.blog, options.hotReload),
     getCommentPlugin(plugins.comment, legacy),
     getCopyCodePlugin(themeData, plugins.copyCode),
     getCopyrightPlugin(themeData, plugins.copyright, options.hostname),

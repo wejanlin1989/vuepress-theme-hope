@@ -19,7 +19,7 @@ tag:
 
 ### navbar <Badge text="建议配置" type="tip" />
 
-- 类型: `HopeThemeNavbarConfig | false`
+- 类型: `NavbarConfig | false`
 - 默认值: `false`
 
 导航栏配置，具体配置方式见上方详情。
@@ -36,7 +36,7 @@ tag:
 - 类型: `HopeNavbarLayoutOptions`
 
   ```ts
-  type HopeThemeNavbarComponent =
+  type NavbarComponent =
     | "Brand"
     | "Links"
     | "Language"
@@ -45,9 +45,9 @@ tag:
     | "Repo";
 
   interface HopeNavbarLayoutOptions {
-    left: HopeThemeNavbarComponent[];
-    center: HopeThemeNavbarComponent[];
-    right: HopeThemeNavbarComponent[];
+    left: NavbarComponent[];
+    center: NavbarComponent[];
+    right: NavbarComponent[];
   }
   ```
 
@@ -103,7 +103,7 @@ tag:
 
 是否在向下滚动时自动隐藏导航栏。
 
-### hideSiteNameonMobile
+### hideSiteNameOnMobile
 
 - 类型: `boolean`
 - 默认值: `true`
@@ -116,7 +116,7 @@ tag:
 
 ### sidebar <Badge text="建议配置" type="tip" />
 
-- 类型: `HopeThemeSidebarConfig | "structure" | "heading" | false`
+- 类型: `SidebarConfig | "structure" | "heading" | false`
 - 默认值: `"structure"`
 
 侧边栏配置。
@@ -130,68 +130,69 @@ tag:
 
 ### sidebarSorter <Badge text="仅限 Root" />
 
-- 类型: `HopeThemeSidebarSorter`
+- 类型: `SidebarSorter`
 
   ```ts
-  export interface HopeThemeSidebarFileInfo {
+  interface SidebarFileInfo {
     type: "file";
-
-    order: number | null;
-    frontmatter: HopeThemeNormalPageFrontmatter;
-    pageData: HopeThemePageData;
+    filename: string;
 
     title: string;
-    path: string;
-  }
-
-  export interface HopeThemeSidebarDirInfo {
-    type: "dir";
-
     order: number | null;
 
-    frontmatter: HopeThemeNormalPageFrontmatter;
-    pageData: HopeThemePageData;
+    frontmatter: ThemeNormalPageFrontmatter;
+    pageData: ThemePageData;
+  }
 
-    info: {
-      prefix: string;
-      text: string;
+  interface SidebarDirInfo {
+    type: "dir";
+    dirname: string;
+    children: SidebarInfo[];
+
+    title: string;
+    order: number | null;
+
+    groupInfo: {
       icon?: string;
       collapsible?: boolean;
       link?: string;
     };
-    children: HopeThemeSidebarInfo[];
+
+    frontmatter: ThemeNormalPageFrontmatter | null;
+    pageData: ThemePageData | null;
   }
 
-  export type HopeThemeSidebarInfo =
-    | HopeThemeSidebarFileInfo
-    | HopeThemeSidebarDirInfo;
+  type SidebarInfo = SidebarFileInfo | SidebarDirInfo;
 
-  export type HopeThemeSidebarSorterKeyWord =
+  type SidebarSorterKeyword =
     | "readme"
     | "order"
     | "date"
     | "date-desc"
     | "filename"
-    | "file-number"
-    | "file-number-desc"
-    | "title"
-    | "title-number"
-    | "title-number-desc";
+    | "title";
 
-  export type HopeThemeSidebarSorterFunction = (
-    infoA: HopeThemeSidebarInfo,
-    infoB: HopeThemeSidebarInfo
+  type SidebarSorterFunction = (
+    infoA: SidebarInfo,
+    infoB: SidebarInfo
   ) => number;
+
+  type SidebarSorter =
+    | SidebarSorterFunction
+    | SidebarSorterFunction[]
+    | SidebarSorterKeyword
+    | SidebarSorterKeyword[];
   ```
 
-- 默认值: `["readme", "order", "title"]`
+- 默认值: `["readme", "order", "title", "filename"]`
 
 结构侧边栏排序器。
 
 你可以:
 
 - 填写自定义函数
-- 提供一个或一组排序器关键字
+- 提供一个排序器关键字
+- 提供一组自定义函数或排序器关键字
 
 可用的关键字有:
 
@@ -200,11 +201,7 @@ tag:
 - `date`: 按日期升序排序
 - `date-desc`: 按日期降序排序
 - `title`: 按标题字母顺序排序
-- `title-number`: 根据标题的字母顺序排序，并以数字标签对相同的标题进行升序排序
-- `title-number-desc`: 按照标题的字母顺序排序，并以数字标签对相同的标题进行降序排序
 - `filename`: 按文件名字母顺序排序
-- `file-number`: 根据文件名的字母顺序排序，并以数字标签对相同的文件名进行升序排序
-- `file-number-desc`: 根据文件名的字母顺序排序，并以数字标签对相同的文件名进行降序排序
 
 ### headerDepth
 

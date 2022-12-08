@@ -1,14 +1,15 @@
-import { convertNavbarConfig } from "./navbar.js";
-import { convertSidebarConfig } from "./sidebar.js";
+import { convertNavbarOptions } from "./navbar.js";
+import { convertSidebarOptions } from "./sidebar.js";
 import { droppedLogger, deprecatedLogger } from "./utils.js";
 import { logger } from "../utils.js";
 
-import type { HopeThemeOptions } from "../../shared/index.js";
+import type { ThemeOptions } from "../../shared/index.js";
 
 const DEPRECATED_THEME_OPTIONS: [string, string][] = [
   // v1
   ["darkLogo", "logoDark"],
   ["navAutoHide", "navbarAutoHide"],
+  ["hideSiteTitleonMobile", "hideSiteNameOnMobile"],
   ["sidebarDepth ", "headerDepth"],
   ["prevLinks", "prevLink"],
   ["nextLinks", "nextLink"],
@@ -31,6 +32,7 @@ const DEPRECATED_THEME_OPTIONS: [string, string][] = [
   ["wordPerMinute", "plugins.readingTime.wordPerMinute"],
 
   // v2
+  ["hideSiteNameonMobile", "hideSiteNameOnMobile"],
   ["fullScreen", "fullscreen"],
   ["headingDepth", "headerDepth"],
 ];
@@ -52,10 +54,6 @@ const DROPPED_THEME_OPTIONS: [string, string?, string?][] = [
   [
     "displayAllHeaders",
     "Due to scalability consideration, V2 no longer supports this.",
-  ],
-  [
-    "hideSiteTitleonMobile",
-    "Site title will be hide on mobile because there is no space for it.",
   ],
   [
     "chunkRename",
@@ -111,7 +109,6 @@ const handleFooterOptions = (options: Record<string, unknown>): void => {
         '"footer.copyright" options is deprecated, please use "copyright" instead'
       );
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       options["copyright"] = footer["copyright"];
     }
@@ -121,7 +118,6 @@ const handleFooterOptions = (options: Record<string, unknown>): void => {
         '"footer.display" options is deprecated, please use "displayFooter" instead'
       );
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       options["displayFooter"] = footer["display"];
     }
@@ -131,7 +127,6 @@ const handleFooterOptions = (options: Record<string, unknown>): void => {
         '"footer.content" options is deprecated, please use "footer" instead'
       );
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       options["footer"] = footer["content"];
     } else delete options["footer"];
@@ -141,9 +136,9 @@ const handleFooterOptions = (options: Record<string, unknown>): void => {
 /**
  * @deprecated You should use V2 standard options and avoid using it
  */
-export const convertThemeConfig = (
+export const convertThemeOptions = (
   themeOptions: Record<string, unknown>
-): HopeThemeOptions => {
+): ThemeOptions => {
   // ensure plugins
   const plugins = (themeOptions["plugins"] =
     (themeOptions["plugins"] as Record<string, unknown>) || {});
@@ -160,11 +155,11 @@ export const convertThemeConfig = (
 
   // handle navbar
   if ("navbar" in themeOptions)
-    themeOptions["navbar"] = convertNavbarConfig(themeOptions["navbar"]);
+    themeOptions["navbar"] = convertNavbarOptions(themeOptions["navbar"]);
 
   // handle sidebar
   if ("sidebar" in themeOptions)
-    themeOptions["sidebar"] = convertSidebarConfig(themeOptions["sidebar"]);
+    themeOptions["sidebar"] = convertSidebarOptions(themeOptions["sidebar"]);
 
   // handle footer
   handleFooterOptions(themeOptions);
@@ -175,8 +170,28 @@ export const convertThemeConfig = (
     if (!plugins["blog"]) plugins["blog"] = true;
   }
 
-  // handle encrypt
+  // handle component
+  if (Array.isArray(plugins["components"])) {
+    logger.warn(
+      '"plugins.components" no longer accpets array, please set it to "plugin.components.components" instead.'
+    );
+
+    plugins["components"] = {
+      components: plugins["components"],
+    };
+  }
+
+  // handle addThis
+  if (themeOptions["addThis"])
+    deprecatedLogger({
+      options: themeOptions,
+      deprecatedOption: "addThis",
+      newOption: "plugins.components.rootComponents.addThis",
+      scope: "themeConfig",
+    });
+
   if (typeof themeOptions["encrypt"] === "object" && themeOptions["encrypt"]) {
+    // handle encrypt
     const encrypt = themeOptions["encrypt"] as Record<string, unknown>;
 
     if ("global" in encrypt && typeof encrypt["global"] !== "boolean") {
@@ -217,11 +232,11 @@ export const convertThemeConfig = (
 
         // handle navbar
         if ("navbar" in localeConfig)
-          localeConfig["navbar"] = convertNavbarConfig(localeConfig["navbar"]);
+          localeConfig["navbar"] = convertNavbarOptions(localeConfig["navbar"]);
 
         // handle sidebar
         if ("sidebar" in localeConfig)
-          localeConfig["sidebar"] = convertSidebarConfig(
+          localeConfig["sidebar"] = convertSidebarOptions(
             localeConfig["sidebar"]
           );
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 // Russian [ru]
 import type { Dayjs, default as dayjs } from "dayjs";
 import type { Locale } from "./locale.js";
@@ -112,6 +111,6 @@ const locale: Partial<Locale> = {
     hour < 4 ? "ночи" : hour < 12 ? "утра" : hour < 17 ? "дня" : "вечера",
 };
 
-export const loadRuLocale = (extendeddayjs: typeof dayjs): void => {
-  extendeddayjs.locale("ru", locale);
+export const loadRuLocale = (extendedDayjs: typeof dayjs): void => {
+  extendedDayjs.locale("ru", locale);
 };

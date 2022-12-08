@@ -18,7 +18,7 @@ export interface HeadingMatchedItem {
 export interface CustomMatchedItem {
   type: "custom";
   path: string;
-  name: string;
+  index: string;
   display: Word[];
 }
 
@@ -81,25 +81,27 @@ export const getResults = (
     }
 
     if (pageIndex.customFields)
-      Object.entries(pageIndex.customFields).forEach(([name, customFields]) => {
-        customFields.forEach((customField) => {
-          const customFieldContent = getMatchedContent(
-            customField,
-            queryString
-          );
+      Object.entries(pageIndex.customFields).forEach(
+        ([index, customFields]) => {
+          customFields.forEach((customField) => {
+            const customFieldContent = getMatchedContent(
+              customField,
+              queryString
+            );
 
-          if (customFieldContent)
-            suggestions[title] = [
-              ...(suggestions[title] || []),
-              {
-                type: "custom",
-                path,
-                name,
-                display: customFieldContent,
-              },
-            ];
-        });
-      });
+            if (customFieldContent)
+              suggestions[title] = [
+                ...(suggestions[title] || []),
+                {
+                  type: "custom",
+                  path,
+                  index,
+                  display: customFieldContent,
+                },
+              ];
+          });
+        }
+      );
 
     for (const headerIndex of pageIndex.contents) {
       const headerContent = getMatchedContent(headerIndex.header, queryString);
@@ -123,7 +125,7 @@ export const getResults = (
             ...(suggestions[title] || []),
             {
               type: "content",
-              header: headerIndex.header || pageIndex.title || "Documentation",
+              header: headerIndex.header,
               path: path + (headerIndex.slug ? `#${headerIndex.slug}` : ""),
               display: matchedContent,
             },

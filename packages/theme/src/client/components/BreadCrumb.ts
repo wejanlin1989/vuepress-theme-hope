@@ -9,7 +9,7 @@ import { getAncestorLinks } from "@theme-hope/utils/index.js";
 import { ArticleInfoType } from "../../shared/index.js";
 
 import type { VNode } from "vue";
-import type { HopeThemeNormalPageFrontmatter } from "../../shared/index.js";
+import type { ThemeNormalPageFrontmatter } from "../../shared/index.js";
 
 import "../styles/breadcrumb.scss";
 
@@ -26,7 +26,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const routeLocale = useRouteLocale();
-    const frontmatter = usePageFrontmatter<HopeThemeNormalPageFrontmatter>();
+    const frontmatter = usePageFrontmatter<ThemeNormalPageFrontmatter>();
     const themeLocale = useThemeLocaleData();
 
     const config = ref<BreadCrumbConfig[]>([]);
@@ -56,8 +56,7 @@ export default defineComponent({
 
           if (route) {
             const { meta, path } = resolveRouteWithRedirect(router, route.path);
-            const title =
-              meta[ArticleInfoType.shortTitle] || meta[ArticleInfoType.title];
+            const title = meta[ArticleInfoType.shortTitle] || meta.title;
 
             if (title)
               return {

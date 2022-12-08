@@ -624,7 +624,15 @@ export default {
 
 在上述的修改中，由于原侧边栏数组即为相关路径下的全部文件，你可以轻松将其替换为 `"structure"` 关键词。
 
-如果你使用结构生成的文件夹下嵌套了其他文件夹且**文件夹包含 `README.md` 文件**，则对应的文件夹会被渲染成一个分组。所以你甚至可以更加激进，比如直接设置 `sidebar: "structure"` 让你的侧边栏全部从文件结构中自动生成。
+如果你使用结构生成的文件夹下嵌套了其他文件夹，则对应的文件夹会被渲染成一个分组。所以你甚至可以更加激进，比如直接设置 `sidebar: "structure"` 让你的侧边栏全部从文件结构中自动生成。
+
+::: warning 限制
+
+由于结构侧边栏取决于文件结构和 Markdown Frontmatter，因此 Markdown 的任何更改都可能更新结构侧边栏。(例如: 如下所述在 Frontmatter 中设置 `index: false`)
+
+但是，对于大型网站，重新计算侧边栏是一个高耗时操作，因此主题只会在 [`hotReload` 启用](../../config/theme/basic.md#hotreload) 的情况下实时更新结构化侧边栏。
+
+:::
 
 #### 进阶控制
 
@@ -710,6 +718,8 @@ interface SidebarDirInfo {
 }
 ```
 
+如果对应文件夹不存在 README.md 文件，则只有分组标题会从文件夹名称中生成。
+
 #### 自定义排序
 
 除了上面的实现外，我们还在主题选项中添加了更为强大的 `sidebarSorter` 选项。你可以传入一个或一系列内置排序器名称，也可以传递一个自己需要的排序函数对同级的侧边栏项目进行排序。
@@ -721,13 +731,9 @@ interface SidebarDirInfo {
 - `date`: 按日期升序排序
 - `date-desc`: 按日期降序排序
 - `title`: 按标题字母顺序排序
-- `title-number`: 根据标题的字母顺序排序，并以数字标签对相同的标题进行升序排序
-- `title-number-desc`: 按照标题的字母顺序排序，并以数字标签对相同的标题进行降序排序
 - `filename`: 按文件名字母顺序排序
-- `file-number`: 根据文件名的字母顺序排序，并以数字标签对相同的文件名进行升序排序
-- `file-number-desc`: 根据文件名的字母顺序排序，并以数字标签对相同的文件名进行降序排序
 
-对应上述的进阶控制，它的默认值是 `["readme", "order", "title"]`
+对应上述的进阶控制，它的默认值是 `["readme", "order", "title", "filename"]`
 
 ## 禁用侧边栏
 
@@ -871,11 +877,11 @@ export default {
 
 ## 相关助手与类型
 
-`vuepress-theme-hope` 将侧边栏的类型导出为 `HopeThemeSideConfig`，同时，提供了一个 `sidebar` Helper 函数。它们可以在 TS 和 JS 中提供侧边栏配置的校验与自动补全。
+`vuepress-theme-hope` 将侧边栏的类型导出为 `SideConfig`，同时，提供了一个 `sidebar` Helper 函数。它们可以在 TS 和 JS 中提供侧边栏配置的校验与自动补全。
 
 ::: tip
 
-为了应对当你将 [多侧边栏配置](#多个侧边栏) 拆分成多个部分的情景，我们还针对性的提供了 `HopeThemeSidebarArrayConfig` `HopeThemeSidebarObjectConfig` 类型与 `arraySidebar` 和 `objectSidebar` Helper 函数。
+为了应对当你将 [多侧边栏配置](#多个侧边栏) 拆分成多个部分的情景，我们还针对性的提供了 `SidebarArrayConfig` `SidebarObjectConfig` 类型与 `arraySidebar` 和 `objectSidebar` Helper 函数。
 
 :::
 
@@ -894,9 +900,9 @@ export default sidebar(/* 你的侧边栏配置 */);
 
 ```ts {4}
 // .vuepress/navbar.ts
-import type { HopeThemeSidebarConfig } from "vuepress-theme-hope";
+import type { SidebarConfig } from "vuepress-theme-hope";
 
-const sidebarConfig: HopeThemeSidebarConfig = [
+const sidebarConfig: SidebarConfig = [
   /* 你的侧边栏配置 */
 ];
 

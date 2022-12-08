@@ -7,13 +7,6 @@ import type {
 
 export interface SearchProCustomFieldOptions {
   /**
-   * Name of the custom field
-   *
-   * 自定义项目的名称
-   */
-  name: string;
-
-  /**
    * Custom field getter
    *
    * 自定义项目的获取器
@@ -49,13 +42,22 @@ export interface SearchProOptions {
   indexContent?: boolean;
 
   /**
-   * Whether enable hmr
+   * Max stored history item count
    *
-   * 是否启用 hmr
+   * 存储历史项目的最大数量
    *
-   * @default false
+   * @default 5
    */
-  hotReload?: boolean;
+  historyCount?: number;
+
+  /**
+   * Delay to start searching after input
+   *
+   * 结束输入到开始搜索的延时
+   *
+   * @default 300
+   */
+  delay?: number;
 
   /**
    * Custom field for search
@@ -74,6 +76,15 @@ export interface SearchProOptions {
    * @default [{key: 'k', ctrl: true}]
    */
   hotKeys?: SearchProHotKeyOptions[];
+
+  /**
+   * Whether enable hmr
+   *
+   * 是否启用 hmr
+   *
+   * @default false
+   */
+  hotReload?: boolean;
 
   /**
    * Locales config

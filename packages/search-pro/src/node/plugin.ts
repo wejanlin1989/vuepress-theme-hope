@@ -33,9 +33,13 @@ export const searchProPlugin =
       define: {
         SEARCH_PRO_CUSTOM_FIELDS: Object.fromEntries(
           (options.customFields || [])
-            .filter((item) => "formatter" in item)
-            .map(({ name, formatter }) => [name, formatter])
+            .map(({ formatter }, index) =>
+              formatter ? [(index.toString(), formatter)] : null
+            )
+            .filter((item): item is [string, string] => item !== null)
         ),
+        SEARCH_PRO_DELAY: options.delay || 300,
+        SEARCH_PRO_HISTORY_COUNT: options.historyCount || 5,
         SEARCH_PRO_HOTKEYS: options.hotKeys || [{ key: "k", ctrl: true }],
         SEARCH_PRO_LOCALES: getLocales({
           app,
@@ -54,7 +58,10 @@ export const searchProPlugin =
       onPrepared: (app): Promise<void> => prepareSearchIndex(app, options),
 
       onWatched: (app, watchers): void => {
-        if (options.hotReload) {
+        const hotReload =
+          "hotReload" in options ? options.hotReload : app.env.isDebug;
+
+        if (hotReload) {
           // this ensure the page is generated or updated
           const searchIndexWatcher = watch("pages/**/*.vue", {
             cwd: app.dir.temp(),

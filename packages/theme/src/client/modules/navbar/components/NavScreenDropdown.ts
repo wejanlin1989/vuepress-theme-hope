@@ -6,8 +6,8 @@ import Icon from "@theme-hope/components/Icon.js";
 
 import type { PropType, VNode } from "vue";
 import type {
-  AutoLink as AutoLinkType,
-  HopeThemeNavGroup,
+  AutoLinkOptions as AutoLinkType,
+  NavGroup,
 } from "../../../../shared/index.js";
 
 import "../styles/nav-screen-dropdown.scss";
@@ -16,10 +16,13 @@ export default defineComponent({
   name: "NavScreenDropdown",
 
   props: {
+    /**
+     * Navbar Screen Dropdown list config
+     *
+     * 导航栏下拉列表配置
+     */
     config: {
-      type: Object as PropType<
-        HopeThemeNavGroup<AutoLinkType | HopeThemeNavGroup<AutoLinkType>>
-      >,
+      type: Object as PropType<NavGroup<AutoLinkType | NavGroup<AutoLinkType>>>,
       required: true,
     },
   },

@@ -22,10 +22,16 @@ tag:
 
 ### autoExcerpt
 
-- 类型: `boolean`
+- 类型: `number | boolean`
 - 默认值: `false`
 
-是否为每个页面生成摘录。
+是否为每个页面生成摘录。数字代表生成的摘录长度 (默认 `200`)
+
+::: warning 限制
+
+默认情况下自动生成摘要在 devServer 中不可用，[查看原因和如何启用](../theme/basic.md#hotreload)。
+
+:::
 
 ### filter
 
@@ -98,3 +104,10 @@ tag:
 - 默认值: `/timeline/`
 
 时间线列表路由路径。
+
+### hotReload
+
+- 类型: `boolean`
+- 默认值: 是否在使用 `--debug` 标识
+
+是否需要在开发服务器启用热更新。

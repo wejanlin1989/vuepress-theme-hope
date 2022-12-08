@@ -23,11 +23,6 @@ icon: config
   ```ts
   interface SearchProCustomFieldOptions {
     /**
-     * 自定义项目的名称
-     */
-    name: string;
-
-    /**
      * 自定义项目的获取器
      */
     getter: (page: Page) => string | string[] | null;
@@ -70,7 +65,6 @@ export default defineUserConfig({
     searchProPlugin({
       customFields: [
         {
-          name: "category",
           getter: (page) => page.frontmatter.category,
           formatter: {
             "/": "Category: $content",
@@ -78,7 +72,6 @@ export default defineUserConfig({
           },
         },
         {
-          name: "tag",
           getter: (page) => page.frontmatter.tag,
           formatter: {
             "/": "Tag: $content",
@@ -133,10 +126,30 @@ export default defineUserConfig({
 
 当热键被按下时，搜索框的输入框会被聚焦，设置为空数组以禁用热键。
 
+## historyCount
+
+- 类型: `number`
+- 默认值: `5`
+
+存储历史项目的最大数量
+
+## delay
+
+- 类型: `number`
+- 默认值: `300`
+
+结束输入到开始搜索的延时
+
+::: note
+
+有大量内容时，进行客户端搜素可能会很慢，在这种情况下你可能需要增加此值来确保开始搜索时用户已完成输入。
+
+:::
+
 ## hotReload
 
 - 类型: `boolean`
-- 默认值: `false`
+- 默认值: 是否使用 `--debug` 标记
 
 是否在开发服务器中中启用实时热重载。
 

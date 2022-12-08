@@ -23,11 +23,6 @@ By default only headings and excerpt of the page will be indexed along with your
   ```ts
   interface SearchProCustomFieldOptions {
     /**
-     * Name of the custom field
-     */
-    name: string;
-
-    /**
      * Custom field getter
      */
     getter: (page: Page) => string | string[] | null;
@@ -70,7 +65,6 @@ export default defineUserConfig({
     searchProPlugin({
       customFields: [
         {
-          name: "category",
           getter: (page) => page.frontmatter.category,
           formatter: {
             "/": "Category: $content",
@@ -78,7 +72,6 @@ export default defineUserConfig({
           },
         },
         {
-          name: "tag",
           getter: (page) => page.frontmatter.tag,
           formatter: {
             "/": "Tag: $content",
@@ -133,10 +126,30 @@ Specify the [event.key](http://keycode.info/) of the hotkeys.
 
 When hotkeys are pressed, the search box input will be focused. Set to an empty array to disable hotkeys.
 
+## historyCount
+
+- Type: `number`
+- Default: `5`
+
+Max stored history item count.
+
+## delay
+
+- Type: `number`
+- Default: `300`
+
+Delay to start searching after input.
+
+::: note
+
+Performing client search with huge contents could be slow, so under this case you might need to increase this value to ensure user finish input before searching.
+
+:::
+
 ## hotReload
 
 - Type: `boolean`
-- Default: `false`
+- Default: Whether using `--debug` flag
 
 Whether to enable hot reload in the development server.
 

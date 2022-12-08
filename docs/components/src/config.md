@@ -34,7 +34,29 @@ Available component names:
 - `"VideoPlayer"`
 - `"YouTube"`
 
-## addThis
+## componentsOptions
+
+Global config for components.
+
+### componentsOptions.fontIcon.assets
+
+- Type: `` "iconfont" | "fontawesome" | `//${string}` | `http://${string}` | `https://${string}`  ``
+- Required: No
+
+Link of font icon asset, `'iconfont'` and `'fontawesome'` keywords are supported.
+
+### componentsOptions.fontIcon.prefix
+
+- Type: `string`
+- Default: Inferred from assets
+
+Class prefix of font icon
+
+## rootComponents
+
+Components to be mounted at root.
+
+### rootComponents.addThis
 
 - Type: `string | false`
 - Default: `false`
@@ -43,14 +65,97 @@ Available component names:
 
 Public ID of addThis.
 
-## backToTop
+### rootComponents.backToTop
 
 - Type: `boolean | number`
 - Default: `false`
 
 Whether enabling backToTop button. When setting a number, it will be used as BackToTop button threshold distance (in pixels), default is 300.
 
-## backToTopLocales
+### rootComponents.notice
+
+- Type: `NoticeOptions`
+
+  ```ts
+  interface NoticeLocaleOptions {
+    /**
+     * Notice title
+     */
+    title: string;
+
+    /**
+     * Notice content
+     */
+    content: string;
+
+    /**
+     * Notice footer
+     */
+    actions: {
+      /**
+       * Action text
+       */
+      text: string;
+      /**
+       * Action link
+       */
+      link?: string;
+      /**
+       * Action type
+       *
+       * @default 'default
+       */
+      type?: "primary" | "default";
+    }[];
+  }
+
+  interface NoticeOptions {
+    /**
+     * Notice locales Options
+     */
+    locales: Record<string, NoticeLocaleOptions>;
+
+    /**
+     * Notice key
+     *
+     * @description Used to identify and store the notice status
+     */
+    key?: string;
+
+    /**
+     * Whether show notice only once or show it in every visit
+     *
+     * @description If `key` is not provided, this option will be ignored
+     *
+     * @default false
+     */
+    showOnce?: string;
+
+    /**
+     * Whether the notice shall be confirmed
+     *
+     * @default true
+     */
+    confirm?: boolean;
+
+    /**
+     * Whether the notice should appear fullscreen
+     *
+     * @default false
+     */
+    fullscreen?: boolean;
+  }
+  ```
+
+- Required: No
+
+Config for global notice.
+
+## locales
+
+Component locales.
+
+### locales.backToTop
 
 - Type: `BackToTopLocaleConfig`
 
@@ -90,17 +195,3 @@ Locales config for BackToTop button.
 - **Korean** (ko-KR)
 
 :::
-
-## iconAssets
-
-- Type: `` "iconfont" | "fontawesome" | `//${string}` | `http://${string}` | `https://${string}`  ``
-- Required: No
-
-Link of font icon asset, `'iconfont'` and `'fontawesome'` keywords are supported.
-
-## iconPrefix
-
-- Type: `string`
-- Default: Inferred from iconAssets
-
-Class prefix of font icon

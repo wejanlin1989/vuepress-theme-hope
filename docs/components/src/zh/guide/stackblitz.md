@@ -43,7 +43,7 @@ StackBlitz 组件高度宽高比，只有当未指定 `height` 时有效。
 
 在编辑器中打开的默认文件。
 
-### initialpath
+### initialPath
 
 - 类型: `string`
 - 必填: 否
@@ -53,16 +53,16 @@ StackBlitz 组件高度宽高比，只有当未指定 `height` 时有效。
 ### embed
 
 - 类型: `boolean`
-- 默认值: `true`
+- 默认值: `false`
 
 无论屏幕大小如何，都强制嵌入视图。
 
-### clickToLoad
+### load
 
 - 类型: `boolean`
-- 默认值: `true`
+- 默认值: `false`
 
-要求用户 "点击加载" 嵌入演示。
+是否直接加载嵌入演示。
 
 ### view
 
@@ -85,7 +85,7 @@ StackBlitz 组件高度宽高比，只有当未指定 `height` 时有效。
 
 在嵌入视图中隐藏导航面板。
 
-### hidedevtools
+### hideDevtools
 
 - 类型: `boolean`
 - 默认值: `false`
@@ -104,8 +104,8 @@ StackBlitz 组件高度宽高比，只有当未指定 `height` 时有效。
 
 一个自定义设置的 StackBlitz 项目:
 
-<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hidedevtools />
+<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hideDevtools />
 
 ```md
-<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hidedevtools />
+<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hideDevtools />
 ```

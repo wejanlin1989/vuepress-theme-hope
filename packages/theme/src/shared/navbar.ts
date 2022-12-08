@@ -1,9 +1,9 @@
-import type { AutoLink, TextItem } from "./utils.js";
+import type { AutoLinkOptions, TextItemOptions } from "./utils.js";
 
 /**
  * Base nav group, has nav items children
  */
-export interface HopeThemeNavGroup<T> extends TextItem {
+export interface NavGroup<T> extends TextItemOptions {
   /**
    * Link prefix of current group
    *
@@ -30,17 +30,6 @@ export interface HopeThemeNavGroup<T> extends TextItem {
  * Navbar types
  */
 // user config
-export type HopeThemeNavbarItem = AutoLink;
-export type HopeThemeNavbarGroup = HopeThemeNavGroup<
-  HopeThemeNavbarGroup | HopeThemeNavbarItem | string
->;
-export type HopeThemeNavbarConfig = (
-  | HopeThemeNavbarItem
-  | HopeThemeNavbarGroup
-  | string
-)[];
-
-// resolved
-export type ResolvedHopeThemeNavbarItem =
-  | HopeThemeNavbarItem
-  | HopeThemeNavGroup<AutoLink | HopeThemeNavGroup<AutoLink>>;
+export type NavbarItem = AutoLinkOptions;
+export type NavbarGroup = NavGroup<NavbarGroup | NavbarItem | string>;
+export type NavbarOptions = (NavbarItem | NavbarGroup | string)[];

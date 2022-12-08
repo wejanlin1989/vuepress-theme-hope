@@ -19,7 +19,7 @@ tag:
 
 ### navbar <Badge text="Рекомендуется" type="tip" />
 
-- Тип: `HopeThemeNavbarConfig | false`
+- Тип: `NavbarConfig | false`
 - По умолчанию: `false`
 
 Конфигурация панели навигации
@@ -36,7 +36,7 @@ tag:
 - Тип: `HopeNavbarLayoutOptions`
 
   ```ts
-  type HopeThemeNavbarComponent =
+  type NavbarComponent =
     | "Brand"
     | "Links"
     | "Language"
@@ -45,9 +45,9 @@ tag:
     | "Repo";
 
   interface HopeNavbarLayoutOptions {
-    left: HopeThemeNavbarComponent[];
-    center: HopeThemeNavbarComponent[];
-    right: HopeThemeNavbarComponent[];
+    left: NavbarComponent[];
+    center: NavbarComponent[];
+    right: NavbarComponent[];
   }
   ```
 
@@ -103,7 +103,7 @@ tag:
 
 Скрывать ли панель навигации при прокрутке вниз.
 
-### hideSiteNameonMobile
+### hideSiteNameOnMobile
 
 - Тип: `boolean`
 - По умолчанию: `true`
@@ -116,7 +116,7 @@ tag:
 
 ### sidebar <Badge text="Рекомендуется" type="tip" />
 
-- Тип: `HopeThemeSidebarConfig | "structure" | "heading" | false`
+- Тип: `SidebarConfig | "structure" | "heading" | false`
 - По умолчанию: `"structure"`
 
 Конфигурация боковой панели.
@@ -130,59 +130,69 @@ tag:
 
 ### sidebarSorter <Badge text="Только root" />
 
-- Тип: `HopeThemeSidebarSorter`
+- Тип: `SidebarSorter`
 
   ```ts
-  export interface HopeThemeSidebarFileInfo {
+  interface SidebarFileInfo {
     type: "file";
-    order: number | null;
-    frontmatter: HopeThemeNormalPageFrontmatter;
-    pageData: HopeThemePageData;
+    filename: string;
+
     title: string;
-    path: string;
-  }
-  export interface HopeThemeSidebarDirInfo {
-    type: "dir";
     order: number | null;
-    frontmatter: HopeThemeNormalPageFrontmatter;
-    pageData: HopeThemePageData;
-    info: {
-      prefix: string;
-      text: string;
+
+    frontmatter: ThemeNormalPageFrontmatter;
+    pageData: ThemePageData;
+  }
+
+  interface SidebarDirInfo {
+    type: "dir";
+    dirname: string;
+    children: SidebarInfo[];
+
+    title: string;
+    order: number | null;
+
+    groupInfo: {
       icon?: string;
       collapsible?: boolean;
       link?: string;
     };
-    children: HopeThemeSidebarInfo[];
+
+    frontmatter: ThemeNormalPageFrontmatter | null;
+    pageData: ThemePageData | null;
   }
-  export type HopeThemeSidebarInfo =
-    | HopeThemeSidebarFileInfo
-    | HopeThemeSidebarDirInfo;
-  export type HopeThemeSidebarSorterKeyWord =
+
+  type SidebarInfo = SidebarFileInfo | SidebarDirInfo;
+
+  type SidebarSorterKeyword =
     | "readme"
     | "order"
     | "date"
     | "date-desc"
     | "filename"
-    | "file-number"
-    | "file-number-desc"
-    | "title"
-    | "title-number"
-    | "title-number-desc";
-  export type HopeThemeSidebarSorterFunction = (
-    infoA: HopeThemeSidebarInfo,
-    infoB: HopeThemeSidebarInfo
+    | "title";
+
+  type SidebarSorterFunction = (
+    infoA: SidebarInfo,
+    infoB: SidebarInfo
   ) => number;
+
+  type SidebarSorter =
+    | SidebarSorterFunction
+    | SidebarSorterFunction[]
+    | SidebarSorterKeyword
+    | SidebarSorterKeyword[];
   ```
 
-- По умолчанию: `["readme", "order", "title"]`
+- По умолчанию: `["readme", "order", "title", "filename"]`
 
 Структура сортировки боковой панели.
 
 Вы можете:
 
-- заполнить пользовательскую функцию
-- предоставить одно или массив ключевых слов сортировщика
+- fill in a custom function
+- provide one sorter keyword
+- provide an array of custom function or sorter keyword
 
 Доступные ключевые слова:
 
@@ -191,11 +201,7 @@ tag:
 - `date`: сортировка по дате по возрастанию
 - `date-desc`: сортировка по дате по убыванию
 - `title`: сортировка по названию в алфавитном порядке
-- `title-number`: сортировка по алфавиту по названию и сортировка по возрастанию тех же названий с разными номерными метками
-- `title-number-desc`: сортировка по алфавиту в соответствии с названием и сортировка по убыванию одинаковых названий с разными номерными метками
 - `filename`: сортировка по алфавиту по имени файла
-- `file-number`: сортировка по алфавиту по имени файла и сортировка по возрастанию одинаковых имен файлов с разными номерными метками
-- `file-number-desc`: сортировка по алфавиту по имени файла и сортировка по убыванию одинаковых имен файлов с разными числовыми метками
 
 ### headerDepth
 

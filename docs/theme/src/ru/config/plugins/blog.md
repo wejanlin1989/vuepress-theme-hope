@@ -22,10 +22,16 @@ tag:
 
 ### autoExcerpt
 
-- Тип: `boolean`
+- Тип: `number | boolean`
 - По умолчанию: `false`
 
-Генерировать ли выдержку для каждой страницы.
+Генерировать ли выдержку для каждой страницы. Number value means excerpt length (default is `200`).
+
+::: warning Limitation
+
+Auto excerpt is not available in devServer by default, [see reasons and how to enable it](../theme/basic.md#hotreload).
+
+:::
 
 ### filter
 
@@ -98,3 +104,10 @@ tag:
 - По умолчанию: `/timeline/`
 
 Путь маршрута списка временной шкалы.
+
+### hotReload
+
+- Type: `boolean`
+- Default: Whether using `--debug` flag
+
+Whether to enable hot reload in the development server.

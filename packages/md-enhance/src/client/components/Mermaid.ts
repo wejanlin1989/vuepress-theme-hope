@@ -77,7 +77,16 @@ export default defineComponent({
   name: "Mermaid",
 
   props: {
+    /**
+     * Mermaid id
+     */
     id: { type: String, required: true },
+
+    /**
+     * Mermaid config
+     *
+     * Mermaid 配置
+     */
     code: { type: String, required: true },
   },
 
@@ -126,7 +135,6 @@ export default defineComponent({
           };
 
           mermaid.initialize({
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             theme: "base",
             themeVariables: getThemeVariables(isDarkmode.value),

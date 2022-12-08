@@ -19,7 +19,7 @@ For related guide, please see [Layout → Navbar](../../guide/layout/navbar.md).
 
 ### navbar <Badge text="Recommended" type="tip" />
 
-- Type: `HopeThemeNavbarConfig | false`
+- Type: `NavbarConfig | false`
 - Default: `false`
 
 Navbar config
@@ -36,7 +36,7 @@ Whether display icons in navbar.
 - Type: `HopeNavbarLayoutOptions`
 
   ```ts
-  type HopeThemeNavbarComponent =
+  type NavbarComponent =
     | "Brand"
     | "Links"
     | "Language"
@@ -45,9 +45,9 @@ Whether display icons in navbar.
     | "Repo";
 
   interface HopeNavbarLayoutOptions {
-    left: HopeThemeNavbarComponent[];
-    center: HopeThemeNavbarComponent[];
-    right: HopeThemeNavbarComponent[];
+    left: NavbarComponent[];
+    center: NavbarComponent[];
+    right: NavbarComponent[];
   }
   ```
 
@@ -103,7 +103,7 @@ The theme can recognize links of GitHub, Gitlab, Gitee and Bitbucket.
 
 Whether to hide navbar when scrolling down.
 
-### hideSiteNameonMobile
+### hideSiteNameOnMobile
 
 - Type: `boolean`
 - Default: `true`
@@ -116,7 +116,7 @@ For guide, see [Layout → Sidebar](../../guide/layout/sidebar.md).
 
 ### sidebar <Badge text="Recommended" type="tip" />
 
-- Type: `HopeThemeSidebarConfig | "structure" | "heading" | false`
+- Type: `SidebarConfig | "structure" | "heading" | false`
 - Default: `"structure"`
 
 Sidebar Config.
@@ -130,68 +130,69 @@ Whether show icons in the sidebar
 
 ### sidebarSorter <Badge text="Root Only" />
 
-- Type: `HopeThemeSidebarSorter`
+- Type: `SidebarSorter`
 
   ```ts
-  export interface HopeThemeSidebarFileInfo {
+  interface SidebarFileInfo {
     type: "file";
-
-    order: number | null;
-    frontmatter: HopeThemeNormalPageFrontmatter;
-    pageData: HopeThemePageData;
+    filename: string;
 
     title: string;
-    path: string;
-  }
-
-  export interface HopeThemeSidebarDirInfo {
-    type: "dir";
-
     order: number | null;
 
-    frontmatter: HopeThemeNormalPageFrontmatter;
-    pageData: HopeThemePageData;
+    frontmatter: ThemeNormalPageFrontmatter;
+    pageData: ThemePageData;
+  }
 
-    info: {
-      prefix: string;
-      text: string;
+  interface SidebarDirInfo {
+    type: "dir";
+    dirname: string;
+    children: SidebarInfo[];
+
+    title: string;
+    order: number | null;
+
+    groupInfo: {
       icon?: string;
       collapsible?: boolean;
       link?: string;
     };
-    children: HopeThemeSidebarInfo[];
+
+    frontmatter: ThemeNormalPageFrontmatter | null;
+    pageData: ThemePageData | null;
   }
 
-  export type HopeThemeSidebarInfo =
-    | HopeThemeSidebarFileInfo
-    | HopeThemeSidebarDirInfo;
+  type SidebarInfo = SidebarFileInfo | SidebarDirInfo;
 
-  export type HopeThemeSidebarSorterKeyWord =
+  type SidebarSorterKeyword =
     | "readme"
     | "order"
     | "date"
     | "date-desc"
     | "filename"
-    | "file-number"
-    | "file-number-desc"
-    | "title"
-    | "title-number"
-    | "title-number-desc";
+    | "title";
 
-  export type HopeThemeSidebarSorterFunction = (
-    infoA: HopeThemeSidebarInfo,
-    infoB: HopeThemeSidebarInfo
+  type SidebarSorterFunction = (
+    infoA: SidebarInfo,
+    infoB: SidebarInfo
   ) => number;
+
+  type SidebarSorter =
+    | SidebarSorterFunction
+    | SidebarSorterFunction[]
+    | SidebarSorterKeyword
+    | SidebarSorterKeyword[];
   ```
 
-- Default: `["readme", "order", "title"]`
+- Default: `["readme", "order", "title", "filename"]`
 
 Structure sidebar sorter.
 
 You can:
 
 - fill in a custom function
-- provide one or an array of sorter keywords
+- provide one sorter keyword
+- provide an array of custom function or sorter keyword
 
 Available keywords are:
 
@@ -200,11 +201,7 @@ Available keywords are:
 - `date`: sort by date ascendingly
 - `date-desc`: sort by date descendingly
 - `title`: alphabetically sort by title
-- `title-number`: alphabetically sort according to title and ascendingly sort same titles with different number label
-- `title-number-desc`: alphabetically sort according to title and descendingly sort same titles with different number label
 - `filename`: alphabetically sort by filename
-- `file-number`: alphabetically sort according to filename and ascendingly sort same filenames with different number label
-- `file-number-desc`: alphabetically sort according to filename and descendingly sort same filenames with different number label
 
 ### headerDepth
 

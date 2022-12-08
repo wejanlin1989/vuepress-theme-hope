@@ -1,30 +1,40 @@
 import { useLocalStorage } from "@vueuse/core";
-import { readonly } from "vue";
-import type { DeepReadonly, Ref } from "vue";
+import { searchProHistoryCount } from "../define.js";
 
-const SEARCH_PRO_STORAGE = "search-pro-history";
+import type { Ref } from "vue";
+import type { MatchedItem } from "../utils/result.js";
+
+const SEARCH_PRO_STORAGE = "search-pro-history-results";
 
 export interface SearchHistory {
-  history: DeepReadonly<Ref<string[]>>;
-  addHistory: (query: string) => void;
+  history: Ref<MatchedItem[]>;
+  addHistory: (item: MatchedItem) => void;
+  removeHistory: (index: number) => void;
 }
 
-const searchProStorage = useLocalStorage<string[]>(SEARCH_PRO_STORAGE, []);
+const searchProStorage = useLocalStorage<MatchedItem[]>(SEARCH_PRO_STORAGE, []);
 
-export const useSearchHistory = (limit = 5): SearchHistory => {
-  const addHistory = (query: string): void => {
-    if (searchProStorage.value.length < limit)
-      searchProStorage.value = Array.from(
-        new Set([query, ...searchProStorage.value])
-      );
+export const useSearchHistory = (): SearchHistory => {
+  const addHistory = (item: MatchedItem): void => {
+    if (searchProStorage.value.length < searchProHistoryCount)
+      searchProStorage.value = [item, ...searchProStorage.value];
     else
-      searchProStorage.value = Array.from(
-        new Set([...searchProStorage.value.slice(0, limit - 1), query])
-      );
+      searchProStorage.value = [
+        item,
+        ...searchProStorage.value.slice(0, searchProHistoryCount - 1),
+      ];
+  };
+
+  const removeHistory = (index: number): void => {
+    searchProStorage.value = [
+      ...searchProStorage.value.slice(0, index),
+      ...searchProStorage.value.slice(index + 1),
+    ];
   };
 
   return {
-    history: readonly(searchProStorage),
+    history: searchProStorage,
     addHistory,
+    removeHistory,
   };
 };

@@ -9,14 +9,13 @@ import AutoLink from "@theme-hope/components/AutoLink.js";
 import DropTransition from "@theme-hope/components/transitions/DropTransition.js";
 
 import type { VNode } from "vue";
-import type { HopeThemeProjectHomePageFrontmatter } from "../../shared/index.js";
+import type { ThemeProjectHomePageFrontmatter } from "../../shared/index.js";
 
 export default defineComponent({
   name: "HomeHero",
 
   setup(_props, { slots }) {
-    const frontmatter =
-      usePageFrontmatter<HopeThemeProjectHomePageFrontmatter>();
+    const frontmatter = usePageFrontmatter<ThemeProjectHomePageFrontmatter>();
     const siteLocale = useSiteLocaleData();
 
     const heroText = computed(() => {
@@ -95,7 +94,7 @@ export default defineComponent({
                       h(AutoLink, {
                         class: ["action-button", action.type || "default"],
                         config: action,
-                        externalLinkIcon: false,
+                        noExternalLinkIcon: true,
                       })
                     )
                   )

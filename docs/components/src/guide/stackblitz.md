@@ -43,7 +43,7 @@ Stackblitz component radio, ONLY valid when `height` not set.
 
 The default file to have open in the editor.
 
-### initialpath
+### initialPath
 
 - Type: `string`
 - Required: No
@@ -53,16 +53,16 @@ The initial URL path the preview should open.
 ### embed
 
 - Type: `boolean`
-- Default: `true`
+- Default: `false`
 
 Force embed view regardless of screen size.
 
-### clickToLoad
+### load
 
 - Type: `boolean`
-- Default: `true`
+- Default: `false`
 
-Require user to 'click to load' the embed demo.
+RWhether load embed demo directly.
 
 ### view
 
@@ -85,7 +85,7 @@ Hide file explorer panel in embed view.
 
 Hide navigation panel in embed view.
 
-### hidedevtools
+### hideDevtools
 
 - Type: `boolean`
 - Default: `false`
@@ -104,8 +104,8 @@ A StackBlitz project:
 
 A StackBlitz project with custom settings:
 
-<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hidedevtools />
+<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hideDevtools />
 
 ```md
-<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hidedevtools />
+<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hideDevtools />
 ```

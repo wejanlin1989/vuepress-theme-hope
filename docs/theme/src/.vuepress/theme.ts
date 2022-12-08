@@ -65,15 +65,17 @@ export default hopeTheme({
   plugins: {
     blog: true,
 
-    components: [
-      "Badge",
-      "BiliBili",
-      "CodePen",
-      "PDF",
-      "StackBlitz",
-      "VideoPlayer",
-      "YouTube",
-    ],
+    components: {
+      components: [
+        "Badge",
+        "BiliBili",
+        "CodePen",
+        "PDF",
+        "StackBlitz",
+        "VideoPlayer",
+        "YouTube",
+      ],
+    },
 
     comment: {
       provider: "Giscus",
@@ -93,12 +95,12 @@ export default hopeTheme({
       container: true,
       demo: true,
       echarts: true,
+      figure: true,
       flowchart: true,
       gfm: true,
       imageLazyload: true,
       imageMark: true,
       imageSize: true,
-      imageTitle: true,
       include: true,
       katex: true,
       mark: true,

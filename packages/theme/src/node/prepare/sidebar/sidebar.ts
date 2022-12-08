@@ -1,125 +1,21 @@
-import { removeLeadingSlash } from "@vuepress/shared";
-import { path } from "@vuepress/utils";
+import { ensureEndingSlash, removeLeadingSlash } from "@vuepress/shared";
 
+import { getSidebarInfo } from "./info.js";
 import { getSorter } from "./sorter.js";
 import { logger } from "../../utils.js";
 
-import type { App, Page } from "@vuepress/core";
+import type { App } from "@vuepress/core";
 import type {
-  HopeThemeConfig,
-  HopeThemeNormalPageFrontmatter,
-  HopeThemePageData,
-  HopeThemeSidebarArrayConfig,
-  HopeThemeSidebarConfig,
-  HopeThemeSidebarGroupItem,
-  HopeThemeSidebarSorter,
-  HopeThemeSidebarInfo,
-  HopeThemeSidebarSorterFunction,
+  ThemeData,
+  SidebarArrayOptions,
+  SidebarOptions,
+  SidebarGroupItem,
+  SidebarSorter,
+  SidebarInfo,
 } from "../../../shared/index.js";
 
-const getInfo = (
-  app: App,
-  rootDir: string,
-  sidebarSorters: HopeThemeSidebarSorterFunction[],
-  base = ""
-): HopeThemeSidebarInfo[] => {
-  const dir = `${rootDir}${base}`;
-
-  return (
-    (
-      (<Page<HopeThemePageData, HopeThemeNormalPageFrontmatter>[]>app.pages)
-        .filter(
-          ({ filePathRelative, pathLocale }) =>
-            // generated from file
-            filePathRelative &&
-            // inside dir
-            filePathRelative.startsWith(dir) &&
-            // filter only current level
-            /^[^/]*(?:\/README.md)?$/.test(
-              filePathRelative.slice(dir.length)
-            ) &&
-            // root dir should filter other locales
-            (dir !== "" || pathLocale === "/")
-        )
-        .map((page) => {
-          const filename = path.relative(dir, page.filePathRelative!);
-
-          // continue to read nest dir
-          if (filename?.endsWith("/README.md")) {
-            const filePath = path.relative(rootDir, page.filePathRelative!);
-            const base = filePath.replace(/README\.md$/, "");
-            const dirname = filename.replace(/README\.md$/, "");
-
-            // get result
-            const result = getInfo(app, rootDir, sidebarSorters, base);
-
-            // get dir information
-            const dirInfo = page.frontmatter.dir;
-
-            return dirInfo?.index !== false
-              ? {
-                  type: "dir",
-
-                  order: dirInfo?.order || null,
-                  frontmatter: page.frontmatter,
-                  pageData: page.data,
-
-                  // generate information
-                  info: {
-                    text:
-                      dirInfo?.text ||
-                      page.frontmatter.shortTitle ||
-                      page.title,
-                    icon: dirInfo?.icon || page.frontmatter.icon,
-                    collapsible:
-                      dirInfo && "collapsible" in dirInfo
-                        ? dirInfo.collapsible
-                        : true,
-                    ...(dirInfo?.link ? { link: page.path } : {}),
-                    prefix: dirname,
-                  },
-
-                  children: dirInfo?.link
-                    ? // filter README.md
-                      result.filter(
-                        (item) =>
-                          !(item.type === "file" && item.path === "README.md")
-                      )
-                    : result,
-                }
-              : null;
-          }
-
-          // it’s a markdown
-          return page.frontmatter.index !== false
-            ? {
-                type: "file",
-                path: filename,
-                title: page.frontmatter.shortTitle || page.title,
-                frontmatter: page.frontmatter,
-                order:
-                  "order" in page.frontmatter ? page.frontmatter.order : null,
-              }
-            : null;
-        })
-        // dir without README.md should be dropped here
-        .filter((info) => info !== null) as HopeThemeSidebarInfo[]
-    )
-      // sort items
-      .sort((infoA, infoB) => {
-        for (let i = 0; i < sidebarSorters.length; i++) {
-          const result = sidebarSorters[i](infoA, infoB);
-
-          if (result !== 0) return result;
-        }
-
-        return 0;
-      })
-  );
-};
-
 const getGeneratePaths = (
-  sidebarConfig: HopeThemeSidebarArrayConfig,
+  sidebarConfig: SidebarArrayOptions,
   prefix = ""
 ): string[] => {
   const result: string[] = [];
@@ -148,28 +44,28 @@ const getGeneratePaths = (
   return result;
 };
 
-const getSidebarItems = (
-  infos: HopeThemeSidebarInfo[]
-): (HopeThemeSidebarGroupItem | string)[] =>
+const getSidebarItems = (infos: SidebarInfo[]): (SidebarGroupItem | string)[] =>
   infos.map((info) => {
-    if (info.type === "file") return info.path;
+    if (info.type === "file") return info.filename;
 
     return {
-      ...info.info,
+      text: info.title,
+      prefix: `${info.dirname}/`,
+      ...info.groupInfo,
       children: getSidebarItems(info.children),
     };
   });
 
 export const getSidebarData = (
   app: App,
-  themeConfig: HopeThemeConfig,
-  sorter?: HopeThemeSidebarSorter
-): HopeThemeSidebarConfig => {
+  themeData: ThemeData,
+  sorter?: SidebarSorter
+): SidebarOptions => {
   const generatePaths: string[] = [];
-  const sidebarSorters = getSorter(sorter);
+  const sorters = getSorter(sorter);
 
   // exact generate sidebar paths
-  Object.entries(themeConfig.locales).forEach(([localePath, { sidebar }]) => {
+  Object.entries(themeData.locales).forEach(([localePath, { sidebar }]) => {
     if (Array.isArray(sidebar))
       generatePaths.push(...getGeneratePaths(sidebar));
     else if (typeof sidebar === "object")
@@ -186,7 +82,13 @@ export const getSidebarData = (
   const sidebarData = Object.fromEntries(
     generatePaths.map((path) => [
       path,
-      getSidebarItems(getInfo(app, removeLeadingSlash(path), sidebarSorters)),
+      getSidebarItems(
+        getSidebarInfo({
+          pages: app.pages,
+          sorters,
+          scope: removeLeadingSlash(ensureEndingSlash(path)),
+        })
+      ),
     ])
   );
 
@@ -200,10 +102,10 @@ export const getSidebarData = (
 
 export const prepareSidebarData = async (
   app: App,
-  themeConfig: HopeThemeConfig,
-  sorter?: HopeThemeSidebarSorter
+  themeData: ThemeData,
+  sorter?: SidebarSorter
 ): Promise<void> => {
-  const sidebarData = getSidebarData(app, themeConfig, sorter);
+  const sidebarData = getSidebarData(app, themeData, sorter);
 
   await app.writeTemp(
     "theme-hope/sidebar.js",

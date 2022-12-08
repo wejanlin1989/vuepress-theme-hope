@@ -1,5 +1,5 @@
 import { withBase } from "@vuepress/client";
-import { defineComponent, h, toRef, unref } from "vue";
+import { defineComponent, h, toRef } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 
 import PageInfo from "@theme-hope/modules/info/components/PageInfo.js";
@@ -20,17 +20,28 @@ export default defineComponent({
   name: "ArticleItem",
 
   props: {
+    /**
+     * Article information
+     *
+     * 文章信息
+     */
     info: {
       type: Object as PropType<ArticleInfo>,
       required: true,
     },
+
+    /**
+     * Article path
+     *
+     * 文章路径
+     */
     path: { type: String, required: true },
   },
 
   setup(props) {
     const router = useRouter();
-    const { config, items } = useArticleInfo(props);
     const info = toRef(props, "info");
+    const { info: articleInfo, items } = useArticleInfo(props);
 
     return (): VNode =>
       h(
@@ -54,11 +65,7 @@ export default defineComponent({
                 info.value[ArticleInfoType.type] === PageType.slide
                   ? h(SlideIcon)
                   : null,
-                h(
-                  "span",
-                  { property: "headline" },
-                  info.value[ArticleInfoType.title]
-                ),
+                h("span", { property: "headline" }, info.value.title),
                 info.value[ArticleInfoType.cover]
                   ? h("meta", {
                       property: "image",
@@ -75,7 +82,7 @@ export default defineComponent({
               : null,
             h("hr", { class: "hr" }),
             h(PageInfo, {
-              config: unref(config),
+              info: articleInfo.value,
               ...(items.value ? { items: items.value } : {}),
             }),
           ]

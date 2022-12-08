@@ -9,7 +9,7 @@ actions:
   - text: 文档
     link: https://vuepress-theme-hope.github.io/v2/feed/zh/
 
-footer: MIT Licensed | Copyright © 2019-present Mr.Hope
+footer: MIT 协议, 版权所有 © 2019-present Mr.Hope
 ---
 
 ## 使用插件

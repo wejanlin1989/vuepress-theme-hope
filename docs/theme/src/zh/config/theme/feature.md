@@ -27,7 +27,7 @@ tag:
 
 :::
 
-### blog.name
+### blog\.name
 
 - 类型: `string`
 - 默认值: `author`
@@ -161,6 +161,12 @@ tag:
 - `"Tag"`
 - `"ReadingTime"`
 - `"Word"`
+
+::: warning 限制
+
+默认情况下，ReadingTime 和 Word 在开发服务器中不可用，[查看原因以及如何启用它](./basic.md#hotreload)。
+
+:::
 
 ## 加密配置 <Badge text="仅限 Root" type="warning" />
 

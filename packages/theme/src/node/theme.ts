@@ -1,73 +1,77 @@
 import { getDirname, path } from "@vuepress/utils";
+import { watch } from "chokidar";
 
 import { resolveAlias } from "./alias.js";
-import { updateBundlerConfig } from "./bundler.js";
-import { extendsPage } from "./extendsPage.js";
+import { extendsBundlerOptions } from "./bundler.js";
 import {
   checkStyle,
   convertFrontmatter,
-  convertThemeConfig,
+  convertThemeOptions,
 } from "./compact/index.js";
+import {
+  checkSocialMediaIcons,
+  getStatus,
+  getThemeData,
+} from "./config/index.js";
+import { checkFrontmatter } from "./frontmatter/index.js";
+import { extendsPage } from "./page/index.js";
 import { getPluginConfig, usePlugin } from "./plugins/index.js";
 import {
   prepareConfigFile,
   prepareSidebarData,
   prepareSocialMediaIcons,
+  prepareThemeColorScss,
 } from "./prepare/index.js";
-import { checkSocialMediaIcons } from "./socialMedia.js";
-import { getStatus } from "./status.js";
-import { getThemeConfig } from "./themeConfig.js";
-import { prepareThemeColorScss } from "./themeColor.js";
 
 import type { Page, ThemeFunction } from "@vuepress/core";
-import type { HopeThemeOptions, HopeThemePageData } from "../shared/index.js";
+import type { ThemeOptions, ThemePageData } from "../shared/index.js";
 
 const __dirname = getDirname(import.meta.url);
 
 export const hopeTheme =
   (
-    options: HopeThemeOptions,
+    options: ThemeOptions,
     // TODO: Remove this in v2 stable
     legacy = false
   ): ThemeFunction =>
   (app) => {
+    const { isDebug } = app.env;
     const {
+      hotReload = isDebug,
       plugins = {},
       hostname,
       iconAssets,
       iconPrefix,
-      addThis,
       backToTop,
       sidebarSorter,
       ...themeOptions
     } = legacy
-      ? convertThemeConfig(
-          options as HopeThemeOptions & Record<string, unknown>
-        )
+      ? convertThemeOptions(options as ThemeOptions & Record<string, unknown>)
       : options;
 
     if (legacy) checkStyle(app);
 
-    const status = getStatus(options);
-    const themeConfig = getThemeConfig(app, themeOptions, status);
+    const status = getStatus(app, options);
+    const themeConfig = getThemeData(app, themeOptions, status);
     const icons = status.enableBlog ? checkSocialMediaIcons(themeConfig) : {};
 
-    usePlugin(app, plugins);
+    usePlugin(app, plugins, hotReload);
 
-    if (app.env.isDebug) console.log("Theme plugin options:", plugins);
+    if (isDebug) console.log("Theme plugin options:", plugins);
 
     return {
       name: "vuepress-theme-hope",
 
-      alias: resolveAlias(app.env.isDebug),
+      alias: resolveAlias(isDebug),
 
       define: () => ({
         ENABLE_BLOG: status.enableBlog,
+        ENABLE_READING_TIME: status.enableReadingTime,
+        HAS_MULTIPLE_LANGUAGES: status.hasMultipleLanguages,
         SUPPORT_PAGEVIEW: status.supportPageview,
       }),
 
-      extendsBundlerOptions: (config: unknown, app): void =>
-        updateBundlerConfig(config, app),
+      extendsBundlerOptions,
 
       extendsPage: (page): void => {
         if (legacy)
@@ -76,11 +80,14 @@ export const hopeTheme =
             page.filePathRelative || ""
           );
 
+        checkFrontmatter(page, app.env.isDebug);
+
         extendsPage(
+          app,
+          <Page<ThemePageData>>page,
           themeConfig,
-          plugins,
-          <Page<HopeThemePageData>>page,
-          app.env.isDebug
+          status,
+          hotReload || app.env.isBuild
         );
       },
 
@@ -91,15 +98,37 @@ export const hopeTheme =
           prepareSocialMediaIcons(app, icons),
         ]).then(() => void 0),
 
+      onWatched: (app, watchers): void => {
+        if (hotReload) {
+          // this ensure the page is generated or updated
+          const searchIndexWatcher = watch("pages/**/*.vue", {
+            cwd: app.dir.temp(),
+            ignoreInitial: true,
+          });
+
+          searchIndexWatcher.on("add", () => {
+            void prepareSidebarData(app, themeConfig, sidebarSorter);
+          });
+          searchIndexWatcher.on("change", () => {
+            void prepareSidebarData(app, themeConfig, sidebarSorter);
+          });
+          searchIndexWatcher.on("unlink", () => {
+            void prepareSidebarData(app, themeConfig, sidebarSorter);
+          });
+
+          watchers.push(searchIndexWatcher);
+        }
+      },
+
       plugins: getPluginConfig(
         plugins,
         themeConfig,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
         // @ts-ignore
         {
-          addThis,
           backToTop,
           hostname,
+          hotReload,
           iconAssets,
           iconPrefix,
         },
@@ -111,8 +140,6 @@ export const hopeTheme =
         "../../templates/index.build.html"
       ),
 
-      clientConfigFile: (app) => prepareConfigFile(app, plugins, status),
+      clientConfigFile: (app) => prepareConfigFile(app, status),
     };
   };
-
-export const hope = hopeTheme;

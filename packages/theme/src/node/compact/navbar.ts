@@ -2,12 +2,12 @@ import { deprecatedLogger } from "./utils.js";
 import { logger } from "../utils.js";
 
 import type {
-  HopeThemeNavbarConfig,
-  HopeThemeNavbarItem,
-  HopeThemeNavbarGroup,
+  NavbarOptions,
+  NavbarItem,
+  NavbarGroup,
 } from "../../shared/index.js";
 
-const handleNavbarConfig = (config: unknown[]): HopeThemeNavbarConfig =>
+const handleNavbarOptions = (config: unknown[]): NavbarOptions =>
   config
     .map((item) => {
       if (typeof item === "string") return item;
@@ -20,31 +20,26 @@ const handleNavbarConfig = (config: unknown[]): HopeThemeNavbarConfig =>
           scope: "navbar",
         });
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         if (Array.isArray(item.children))
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          handleNavbarConfig(item.children as unknown[]);
+          handleNavbarOptions(item.children as unknown[]);
 
-        return item as HopeThemeNavbarItem | HopeThemeNavbarGroup;
+        return item as NavbarItem | NavbarGroup;
       }
 
       return null;
     })
-    .filter(
-      (item): item is HopeThemeNavbarItem | HopeThemeNavbarGroup | string =>
-        item !== null
-    );
+    .filter((item): item is NavbarItem | NavbarGroup | string => item !== null);
 
 /**
  * @deprecated You should use V2 standard navbar config and avoid using it
  */
-export const convertNavbarConfig = (
+export const convertNavbarOptions = (
   config: unknown
-): HopeThemeNavbarConfig | false => {
+): NavbarOptions | false => {
   if (config === false) return false;
-  if (Array.isArray(config)) return handleNavbarConfig(config);
+  if (Array.isArray(config)) return handleNavbarOptions(config);
 
   logger.error('"navbar" config should be an array');
 

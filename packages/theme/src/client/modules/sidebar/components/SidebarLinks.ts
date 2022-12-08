@@ -6,7 +6,7 @@ import SidebarGroup from "@theme-hope/modules/sidebar/components/SidebarGroup.js
 import { isMatchedSidebarItem } from "@theme-hope/modules/sidebar/utils/index.js";
 
 import type { PropType, VNode } from "vue";
-import type { ResolvedSidebarItem } from "../../../../shared/index.js";
+import type { ResolvedSidebarItem } from "../utils/index.js";
 
 import "../styles/sidebar-links.scss";
 
@@ -14,6 +14,11 @@ export default defineComponent({
   name: "SidebarLinks",
 
   props: {
+    /**
+     * Sidebar links config
+     *
+     * 侧边栏链接配置
+     */
     config: {
       type: Array as PropType<ResolvedSidebarItem[]>,
       required: true,
@@ -29,7 +34,7 @@ export default defineComponent({
     };
 
     watch(
-      () => [route.path, props.config],
+      () => route.path,
       (): void => {
         const index = props.config.findIndex((item) =>
           isMatchedSidebarItem(route, item)
@@ -37,7 +42,7 @@ export default defineComponent({
 
         openGroupIndex.value = index;
       },
-      { immediate: true }
+      { immediate: true, flush: "post" }
     );
 
     return (): VNode | null =>

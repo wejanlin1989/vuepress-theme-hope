@@ -23,6 +23,8 @@ export default hopeTheme({
 
   pageInfo: ["Author", "Original", "Date", "Category", "Tag", "ReadingTime"],
 
+  hotReload: true,
+
   blog: {
     medias: {
       Baidu: "https://example.com",
@@ -158,10 +160,10 @@ export default hopeTheme({
       container: true,
       demo: true,
       echarts: true,
+      figure: true,
       flowchart: true,
       gfm: true,
       imageLazyload: true,
-      imageTitle: true,
       imageSize: true,
       include: true,
       katex: true,

@@ -27,7 +27,7 @@ For details, see [Blog Feature Intro](../../guide/blog/intro.md).
 
 :::
 
-### blog.name
+### blog\.name
 
 - Type: `string`
 - Default: `author`
@@ -159,6 +159,12 @@ Available values for `ArticleInfo`:
 - `"Tag"`
 - `"ReadingTime"`
 - `"Word"`
+
+::: warning Limitation
+
+ReadingTime and Word are not available in devServer by default, [see reasons and how to enable it](./basic.md#hotreload).
+
+:::
 
 ## Encrypt Config <Badge text="Root only" type="warning" />
 

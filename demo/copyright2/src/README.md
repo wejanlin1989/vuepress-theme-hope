@@ -8,7 +8,7 @@ actions:
   - text: Docs
     link: https://vuepress-theme-hope.github.io/v2/copyright/
 
-footer: MIT Licensed | Copyright © 2019-present Mr.Hope
+footer: MIT Licensed, Copyright © 2019-present Mr.Hope
 ---
 
 ## Demo

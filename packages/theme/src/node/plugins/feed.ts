@@ -3,29 +3,24 @@ import { deepAssign } from "vuepress-shared/node";
 
 import type { Plugin } from "@vuepress/core";
 import type { FeedOptions } from "vuepress-plugin-feed2";
-import type { HopeThemeConfig } from "../../shared/index.js";
+import type { ThemeData } from "../../shared/index.js";
 
 export const getFeedPlugin = (
-  themeConfig: HopeThemeConfig,
-  options?: Omit<FeedOptions, "hostname"> | false,
+  themeData: ThemeData,
+  options?: Omit<FeedOptions, "hostname">,
   hostname?: string,
   legacy = false
 ): Plugin | null => {
-  if (
-    options === false ||
-    // disable feed if no options for feed plugin
-    !Object.keys(options || {}).length
-  )
-    return null;
+  // disable feed if no options for feed plugin
+  if (!Object.keys(options || {}).length) return null;
 
   return feedPlugin(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     deepAssign(
       {
         hostname,
-        ...(themeConfig.author ? { author: themeConfig.author } : {}),
-        locales: Object.entries(themeConfig.locales).map(
+        ...(themeData.author ? { author: themeData.author } : {}),
+        locales: Object.entries(themeData.locales).map(
           ([localePath, { author, copyright }]) => [
             localePath,
             { author, channel: { copyright } },
@@ -35,24 +30,29 @@ export const getFeedPlugin = (
       options || {},
       {
         customElements: [
+          // @vuepress/plugin-external-link
           "ExternalLinkIcon",
+
+          // vuepress-plugin-components
           "Badge",
-          "Bilibili",
+          "BiliBili",
+          "CodePen",
+          "PDF",
+          "StackBlitz",
+          "VideoPlayer",
+          "YouTube",
+
+          // vuepress-plugin-md-enhance
           "ChartJS",
           "CodeDemo",
-          "CodePen",
           "CodeTabs",
           "ECharts",
           "FlowChart",
           "Mermaid",
-          "PDF",
           "Playground",
           "Presentation",
-          "StackBlitz",
           "Tabs",
-          "VideoPlayer",
           "VuePlayground",
-          "YouTube",
           ...(options?.customElements || []),
         ],
       }

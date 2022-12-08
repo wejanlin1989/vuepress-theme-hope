@@ -1,3 +1,4 @@
+/* eslint-disable vue/no-unused-properties */
 import { withBase } from "@vuepress/client";
 import { isLinkHttp } from "@vuepress/shared";
 import { computed, defineComponent, h, onMounted, ref } from "vue";
@@ -20,33 +21,69 @@ export default defineComponent({
   name: "PDF",
 
   props: {
+    /**
+     * PDF link, should be absolute url
+     *
+     * PDF 文件链接，应为完整链接
+     */
     url: { type: String, required: true },
 
+    /**
+     * Component width
+     *
+     * 组件宽度
+     */
     width: {
       type: [String, Number],
       default: "100%",
     },
 
+    /**
+     * Component height
+     *
+     * 组件高度
+     */
     height: {
       type: [String, Number],
       default: undefined,
     },
 
+    /**
+     * Component width / height ratio
+     *
+     * 组件长宽比
+     */
     ratio: {
       type: Number,
       default: 16 / 9,
     },
 
+    /**
+     * PDF initial page number
+     *
+     * PDF 初始页码
+     *
+     * @description Chrome only
+     */
     page: {
       type: Number,
       default: 1,
     },
 
-    toolbar: {
-      type: Boolean,
-      default: true,
-    },
+    /**
+     * Whether show toolbar
+     *
+     * 是否显示工具栏
+     *
+     * @description Chrome only
+     */
+    noToolbar: Boolean,
 
+    /**
+     * initial zoom level (in percent)
+     *
+     * 初始缩放比率 (百分比)
+     */
     zoom: {
       type: Number,
       default: 100,
@@ -60,7 +97,7 @@ export default defineComponent({
 
     const hash = computed(
       () =>
-        `#page=${props.page}&toolbar=${props.toolbar ? 1 : 0}&zoom=${
+        `#page=${props.page}&toolbar=${props.noToolbar ? 0 : 1}&zoom=${
           props.zoom
         }`
     );

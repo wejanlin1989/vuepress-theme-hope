@@ -1,6 +1,6 @@
 {
   "name": "vuepress-plugin-copyright2",
-  "version": "2.0.0-beta.125",
+  "version": "2.0.0-beta.135",
   "description": "Copyright plugin for VuePress",
   "keywords": [
     "vuepress",
@@ -46,17 +46,26 @@
     "@vuepress/client": "2.0.0-beta.53",
     "@vuepress/shared": "2.0.0-beta.53",
     "@vuepress/utils": "2.0.0-beta.53",
-    "@vueuse/core": "^9.5.0",
+    "@vueuse/core": "^9.6.0",
     "vue": "^3.2.45",
+    "vue-router": "^4.1.6",
     "vuepress-shared": "workspace:*"
   },
   "peerDependencies": {
-    "sass-loader": "^13.0.0",
+    "sass-loader": "^13.2.0",
     "vuepress": "2.0.0-beta.53",
     "vuepress-vite": "2.0.0-beta.53",
     "vuepress-webpack": "2.0.0-beta.53"
   },
+  "engines": {
+    "node": "^14.18.0 || >=16.0.0",
+    "npm": ">=8",
+    "pnpm": ">=7"
+  },
   "peerDependenciesMeta": {
+    "sass-loader": {
+      "optional": true
+    },
     "vuepress": {
       "optional": true
     },
@@ -68,7 +77,6 @@
     }
   },
   "devDependencies": {
-    "@vuepress/core": "2.0.0-beta.53",
-    "rimraf": "3.0.2"
+    "@vuepress/core": "2.0.0-beta.53"
   }
 }

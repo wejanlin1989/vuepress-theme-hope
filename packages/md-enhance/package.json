@@ -1,6 +1,6 @@
 {
   "name": "vuepress-plugin-md-enhance",
-  "version": "2.0.0-beta.125",
+  "version": "2.0.0-beta.135",
   "description": "Markdown enhancement plugin for vuepress",
   "keywords": [
     "vuepress",
@@ -53,7 +53,7 @@
     "dev:ts": "tsc -b tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@babel/core": "*",
+    "@babel/core": "^7.20.5",
     "@mermaid-js/mermaid-mindmap": "^9.2.2",
     "@types/katex": "^0.14.0",
     "@types/markdown-it": "^12.2.3",
@@ -61,13 +61,13 @@
     "@vuepress/client": "2.0.0-beta.53",
     "@vuepress/shared": "2.0.0-beta.53",
     "@vuepress/utils": "2.0.0-beta.53",
-    "@vueuse/core": "^9.5.0",
+    "@vueuse/core": "^9.6.0",
     "balloon-css": "^1.2.0",
     "chart.js": "^4.0.1",
     "echarts": "^5.4.0",
     "flowchart.js": "^1.17.1",
     "juice": "^8.1.0",
-    "katex": "^0.16.3",
+    "katex": "^0.16.4",
     "markdown-it": "^13.0.1",
     "mathjax-full": "^3.2.2",
     "mermaid": "^9.2.2",
@@ -83,14 +83,18 @@
     "@vuepress/core": "2.0.0-beta.53",
     "@vuepress/markdown": "2.0.0-beta.53",
     "markdown-it-container": "3.0.0",
-    "rimraf": "3.0.2",
-    "typescript": "4.9.3"
+    "typescript": "4.9.4"
   },
   "peerDependencies": {
-    "sass-loader": "^13.0.0",
+    "sass-loader": "^13.2.0",
     "vuepress": "2.0.0-beta.53",
     "vuepress-vite": "2.0.0-beta.53",
     "vuepress-webpack": "2.0.0-beta.53"
+  },
+  "engines": {
+    "node": "^14.18.0 || >=16.0.0",
+    "npm": ">=8",
+    "pnpm": ">=7"
   },
   "peerDependenciesMeta": {
     "sass-loader": {

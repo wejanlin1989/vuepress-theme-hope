@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 // Polish [pl]
 import type { Dayjs, default as dayjs } from "dayjs";
 import type { Locale } from "./locale.js";
@@ -97,6 +96,6 @@ const locale: Partial<Locale> = {
   },
 };
 
-export const loadPlLocale = (extendeddayjs: typeof dayjs): void => {
-  extendeddayjs.locale("pl", locale);
+export const loadPlLocale = (extendedDayjs: typeof dayjs): void => {
+  extendedDayjs.locale("pl", locale);
 };

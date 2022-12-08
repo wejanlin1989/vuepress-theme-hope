@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 // Slovak [sk]
 import type dayjs from "dayjs";
 import type { Locale } from "./locale.js";
@@ -119,6 +118,6 @@ const locale: Partial<Locale> = {
   },
 };
 
-export const loadSkLocale = (extendeddayjs: typeof dayjs): void => {
-  extendeddayjs.locale("sk", locale);
+export const loadSkLocale = (extendedDayjs: typeof dayjs): void => {
+  extendedDayjs.locale("sk", locale);
 };

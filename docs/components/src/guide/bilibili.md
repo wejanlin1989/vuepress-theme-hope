@@ -4,6 +4,8 @@ title: BiliBili
 
 Embed BiliBili videos in Markdown files.
 
+<!-- more -->
+
 ## Props
 
 ### bvid
@@ -48,12 +50,19 @@ BiliBili component radio, ONLY valid when `height` not set.
 
 Start time of the video (in seconds).
 
-### danmaku
+### lowQuality
 
 - Type: `boolean`
-- Default: `true`
+- Default: `false`
 
-Whether to enable danmaku
+Whether to use source having low quality.
+
+### noDanmaku
+
+- Type: `boolean`
+- Default: `false`
+
+Whether to disable danmaku
 
 ## Demo
 
@@ -75,8 +84,8 @@ A bilibili video with radio, start time and page:
 
 A bilibili video with custom settings:
 
-<BiliBili bvid="BV1kt411o7C3" :auto-height="[9 / 16, 20]" :high-quality="false" :danmaku="false" />
+<BiliBili bvid="BV1kt411o7C3" :auto-height="[9 / 16, 20]" low-quality no-danmaku />
 
 ```md
-<BiliBili bvid="BV1kt411o7C3" :auto-height="[9 / 16, 20]" :high-quality="false" :danmaku="false" />
+<BiliBili bvid="BV1kt411o7C3" :auto-height="[9 / 16, 20]" low-quality no-danmaku />
 ```

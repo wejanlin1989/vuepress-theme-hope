@@ -26,6 +26,9 @@ import type { PageInfo } from "../../../../shared/index.js";
 import "balloon-css/balloon.css";
 import "../styles/page-info.scss";
 
+declare const ENABLE_READING_TIME: boolean;
+declare const SUPPORT_PAGEVIEW: boolean;
+
 export interface PageInfoProps {
   /**
    * Authors of article
@@ -96,13 +99,18 @@ export default defineComponent({
     CategoryInfo,
     DateInfo,
     OriginalInfo,
-    PageViewInfo,
-    ReadingTimeInfo,
+    PageViewInfo: SUPPORT_PAGEVIEW ? PageViewInfo : (): null => null,
+    ReadingTimeInfo: ENABLE_READING_TIME ? ReadingTimeInfo : (): null => null,
     TagInfo,
     WordInfo,
   },
 
   props: {
+    /**
+     * Article information to display
+     *
+     * 待展示的文章信息
+     */
     items: {
       type: [Array, Boolean] as PropType<PageInfo[] | false>,
       default: (): PageInfo[] => [
@@ -115,7 +123,12 @@ export default defineComponent({
       ],
     },
 
-    config: {
+    /**
+     * Article information
+     *
+     * 文章信息配置
+     */
+    info: {
       type: Object as PropType<PageInfoProps>,
       required: true,
     },
@@ -131,7 +144,7 @@ export default defineComponent({
             { class: "page-info" },
             props.items.map((item) =>
               h(resolveComponent(`${item}Info`), {
-                ...props.config,
+                ...props.info,
                 pure: pure.value,
               })
             )

@@ -61,10 +61,10 @@ tag:
 
 ## navbar
 
-- 类型: `HopeThemeNavbarConfig`
+- 类型: `NavbarConfig`
 
   ```ts
-  interface TextItem {
+  interface TextItemOptions {
     /**
      * 项目文字
      */
@@ -81,7 +81,7 @@ tag:
     ariaLabel?: string;
   }
 
-  interface AutoLink extends TextItem {
+  interface AutoLinkOptions extends TextItemOptions {
     /**
      * 当前页面链接
      */
@@ -103,7 +103,7 @@ tag:
     activeMatch?: string;
   }
 
-  interface HopeThemeNavGroup<T> extends TextItem {
+  interface NavGroup<T> extends TextItemOptions {
     /**
      * 当前分组的页面前缀
      */
@@ -120,15 +120,9 @@ tag:
     children: T[];
   }
 
-  type HopeThemeNavbarItem = AutoLink;
-  type HopeThemeNavbarGroup = HopeThemeNavGroup<
-    HopeThemeNavbarGroup | HopeThemeNavbarItem | string
-  >;
-  type HopeThemeNavbarConfig = (
-    | HopeThemeNavbarItem
-    | HopeThemeNavbarGroup
-    | string
-  )[];
+  type NavbarItem = AutoLinkOptions;
+  type NavbarGroup = NavGroup<NavbarGroup | NavbarItem | string>;
+  type NavbarConfig = (NavbarItem | NavbarGroup | string)[];
   ```
 
 - 详情: [布局 → 导航栏](../../guide/layout/navbar.md)
@@ -137,10 +131,10 @@ tag:
 
 ## sidebar
 
-- 类型: `HopeThemeSidebarConfig`
+- 类型: `SidebarConfig`
 
   ```ts
-  interface TextItem {
+  interface TextItemOptions {
     /**
      * 项目文字
      */
@@ -157,7 +151,7 @@ tag:
     ariaLabel?: string;
   }
 
-  interface AutoLink extends TextItem {
+  interface AutoLinkOptions extends TextItemOptions {
     /**
      * 当前页面链接
      */
@@ -179,9 +173,9 @@ tag:
     activeMatch?: string;
   }
 
-  type HopeThemeSidebarPageItem = AutoLink;
+  type SidebarPageItem = AutoLinkOptions;
 
-  interface HopeThemeSidebarGroupItem extends TextItem {
+  interface SidebarGroupItem extends TextItemOptions {
     /**
      * 当前分组的页面前缀
      */
@@ -203,14 +197,14 @@ tag:
      * 当前分组的子项
      */
     children: (
-      | HopeThemeSidebarPageItem
-      | HopeThemeSidebarGroupItem
-      | HopeThemeSidebarStructureItem
+      | SidebarPageItem
+      | SidebarGroupItem
+      | SidebarStructureItem
       | string
     )[];
   }
 
-  interface HopeThemeSidebarStructureItem extends TextItem {
+  interface SidebarStructureItem extends TextItemOptions {
     /**
      * 当前分组的页面前缀
      */
@@ -231,22 +225,20 @@ tag:
     children: "structure";
   }
 
-  type HopeThemeSidebarItem =
-    | HopeThemeSidebarPageItem
-    | HopeThemeSidebarGroupItem
-    | HopeThemeSidebarStructureItem
+  type SidebarItem =
+    | SidebarPageItem
+    | SidebarGroupItem
+    | SidebarStructureItem
     | string;
 
-  type HopeThemeSidebarArrayConfig = HopeThemeSidebarItem[];
+  type SidebarArrayConfig = SidebarItem[];
 
-  type HopeThemeSidebarObjectConfig = Record<
+  type SidebarObjectConfig = Record<
     string,
-    HopeThemeSidebarArrayConfig | "structure" | false
+    SidebarArrayConfig | "structure" | false
   >;
 
-  type HopeThemeSidebarConfig =
-    | HopeThemeSidebarArrayConfig
-    | HopeThemeSidebarObjectConfig;
+  type SidebarConfig = SidebarArrayConfig | SidebarObjectConfig;
   ```
 
 - 详情: [布局 → 侧边栏](../../guide/layout/sidebar.md)
@@ -255,8 +247,36 @@ tag:
 
 ## locales
 
-- 类型: `Record<string, HopeThemeLocaleOptions>`
+- 类型: `Record<string, ThemeLocaleOptions>`
 - 详情:
   - [主题多语言配置](./i18n.md)
 
 主题的多语言配置，你可以在这里分别为每个语言设置单独的选项。
+
+## hotReload
+
+- 类型: `boolean`
+- 默认值: 是否在使用 `--debug` 标识
+
+是否需要在开发服务器启用完整功能与热更新。
+是否在开发服务器中启用热重载。
+
+::: tip
+
+通常，你会希望:
+
+- 开发服务器可以被尽快启动
+- 对项目的修改可以在开发服务器上快速生效，并避免重新启动整个 VuePress 应用程序。
+
+为了达到这个预期，主题需要在开发服务器上的跳过一些耗时操作，并且需要在开发服务器上禁用一些由页面修改触发的耗时功能，以提高项目启动和热更新的速度。同时，由于一些修改会改变 VuePress 的底层原始数据，这些修改会导致网页刷新并重新加载整个 VuePress 应用程序。为了避免在修改 Markdown 时频繁的页面重新加载 (即: 触发页面刷新并且获得几秒钟的白屏)，该主题禁用了开发服务器上的某些功能。
+
+默认情况下，开发服务器拥有以下限制:
+
+- 不启用基于 Git 的功能，包括贡献者、自动创建日期和最后更新时间 (调用 Git 程序以及文件 IO 会导致高耗时)
+- 结构化侧边栏只会在应用启动时生成，后续不会更新 (侧边栏排序和索引取决于每个页面 frontmatter，Markdown 内容的任何变化都会触发重新计算，因此大量页面会导致高耗时)
+- 博客文章、标签、分类和每个分类中的文章列表不会随着开发服务器更新 (Markdown 内容的任何变化都会触发重新计算，所以大量的页面会导致高耗时)
+- 博客文章信息不含阅读时间和字数信息，也不包含自动生成的摘要 (Markdown 内容的任何更改都会更改页面字数信息，并因更新了 VuePress 底层原始数据导致页面刷新)
+
+启用它意味着你接受每次修改都会触发一些高耗时计算并且整个应用程序将重新启动，这通常会导致页面刷新，并在在性能较弱的环境中获得数秒白屏。
+
+:::

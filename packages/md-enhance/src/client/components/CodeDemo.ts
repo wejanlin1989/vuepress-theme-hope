@@ -23,25 +23,51 @@ export default defineComponent({
   name: "CodeDemo",
 
   props: {
+    /**
+     * Code demo id
+     *
+     * 代码演示 id
+     */
     id: {
       type: String,
       required: true,
     },
+
+    /**
+     * Code demo type
+     *
+     * 代码演示类型
+     */
     type: {
       type: String as PropType<"normal" | "vue" | "react">,
       default: "normal",
     },
 
+    /**
+     * Code demo title
+     *
+     * 代码演示标题
+     */
     title: {
       type: String,
       default: "",
     },
 
+    /**
+     * Code demo config
+     *
+     * 代码演示配置
+     */
     config: {
       type: String,
       default: "",
     },
 
+    /**
+     * Code demo code content
+     *
+     * 代码演示代码内容
+     */
     code: {
       type: String,
       required: true,
@@ -56,7 +82,10 @@ export default defineComponent({
     const loaded = ref(false);
 
     const config = computed(
-      () => <Partial<CodeDemoOptions>>JSON.parse(atou(props.config) || "{}")
+      () =>
+        <Partial<CodeDemoOptions>>(
+          JSON.parse(props.config ? atou(props.config) : "{}")
+        )
     );
 
     const codeType = computed(() => {

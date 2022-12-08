@@ -25,9 +25,9 @@ tag:
 ```json
 {
   "scripts": {
-    "docs:build": "vuepress build docs",
-    "docs:clean-dev": "vuepress dev docs --clean-cache",
-    "docs:dev": "vuepress dev docs"
+    "docs:build": "vuepress build src",
+    "docs:clean-dev": "vuepress dev src --clean-cache",
+    "docs:dev": "vuepress dev src"
   }
 }
 ```
@@ -55,7 +55,7 @@ tag:
 @tab pnpm
 
 ```bash
-pnpm add @vuepress/client@next vuepress@next vuepress-theme-hope@next && pnpm i && pnpm up
+pnpm add @vuepress/client@next vue vuepress@next vuepress-theme-hope@next && pnpm i && pnpm up
 ```
 
 @tab yarn
@@ -69,5 +69,13 @@ yarn add vuepress@next vuepress-theme-hope@next && yarn install && yarn upgrade
 ```bash
 npm i vuepress@next vuepress-theme-hope@next && npm install && npm update
 ```
+
+:::
+
+::: warning
+
+任何以 `@vuepress/plugin-` 开头的官方插件应该和 VuePress 保持相同版本。
+
+如果你使用了其他第三方插件，请确保它兼容你要升级到的 VuePress 版本。
 
 :::

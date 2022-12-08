@@ -1,6 +1,6 @@
 import { chalk } from "@vuepress/utils";
 import { defineHopeConfig } from "./helper-v2.js";
-import { convertThemeConfig } from "./theme.js";
+import { convertThemeOptions } from "./theme.js";
 import { deprecatedMsg } from "./utils.js";
 
 import { logger } from "../utils.js";
@@ -9,17 +9,15 @@ import type { Plugin, PluginConfig } from "@vuepress/core";
 import type { UserConfig } from "@vuepress/cli";
 import type { MarkdownOptions } from "@vuepress/markdown";
 import type {
-  HopeThemeNavbarConfig,
-  HopeThemeSidebarConfig,
-  HopeThemeOptions,
+  NavbarOptions,
+  SidebarOptions,
+  ThemeOptions,
 } from "../../shared/index.js";
 
 /**
  * @deprecated use `import { navbar } from "vuepress-theme-hope";` instead
  */
-export const navbarConfig = (
-  config: HopeThemeNavbarConfig
-): HopeThemeNavbarConfig => {
+export const navbarConfig = (config: NavbarOptions): NavbarOptions => {
   deprecatedMsg(
     "navbarConfig",
     'import { navbar } from "vuepress-theme-hope";'
@@ -31,9 +29,7 @@ export const navbarConfig = (
 /**
  * @deprecated use `import { arraySidebar } from "vuepress-theme-hope";` instead
  */
-export const sidebarConfig = (
-  config: HopeThemeSidebarConfig
-): HopeThemeSidebarConfig => {
+export const sidebarConfig = (config: SidebarOptions): SidebarOptions => {
   deprecatedMsg(
     "sidebarConfig",
     'import { sidebar } from "vuepress-theme-hope";'
@@ -45,16 +41,14 @@ export const sidebarConfig = (
 /**
  * @deprecated use `import { hopeThemeLegacy } from "vuepress-theme-hope";` instead
  */
-export const themeConfig = (
-  themeConfig: HopeThemeOptions
-): HopeThemeOptions => {
+export const themeConfig = (themeConfig: ThemeOptions): ThemeOptions => {
   deprecatedMsg(
     "themeConfig",
     'import { hopeThemeLegacy } from "vuepress-theme-hope";'
   );
 
-  return convertThemeConfig(
-    themeConfig as HopeThemeOptions & Record<string, unknown>
+  return convertThemeOptions(
+    themeConfig as ThemeOptions & Record<string, unknown>
   );
 };
 

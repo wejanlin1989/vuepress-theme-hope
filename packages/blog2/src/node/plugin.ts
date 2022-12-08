@@ -61,7 +61,10 @@ export const blogPlugin =
       },
 
       onWatched: (app, watchers): void => {
-        if (options.hotReload) {
+        const hotReload =
+          "hotReload" in options ? options.hotReload : app.env.isDebug;
+
+        if (hotReload) {
           const pageDataWatcher = watch("pages/**/*.js", {
             cwd: app.dir.temp(),
             ignoreInitial: true,
@@ -80,22 +83,22 @@ export const blogPlugin =
                 newGeneratedPageKeys.push(...pageKeys);
               }),
             ]).then(async () => {
-              const pagestoBeRemoved = generatePageKeys.filter(
+              const pagesToBeRemoved = generatePageKeys.filter(
                 (key) => !newGeneratedPageKeys.includes(key)
               );
-              const pagestoBeAdded = newGeneratedPageKeys.filter(
+              const pagesToBeAdded = newGeneratedPageKeys.filter(
                 (key) => !generatePageKeys.includes(key)
               );
 
-              if (pagestoBeAdded.length) {
+              if (pagesToBeAdded.length) {
                 if (app.env.isDebug)
                   logger.info(
-                    `New pages detected: ${pagestoBeAdded.toString()}`
+                    `New pages detected: ${pagesToBeAdded.toString()}`
                   );
 
                 // prepare page files
                 await Promise.all(
-                  pagestoBeAdded.map(async (pageKey) => {
+                  pagesToBeAdded.map(async (pageKey) => {
                     await preparePageComponent(
                       app,
                       app.pages.find(({ key }) => key === pageKey)!
@@ -109,13 +112,13 @@ export const blogPlugin =
               }
 
               // remove pages
-              if (pagestoBeRemoved.length) {
+              if (pagesToBeRemoved.length) {
                 if (app.env.isDebug)
                   logger.info(
-                    `Removing following pages: ${pagestoBeRemoved.toString()}`
+                    `Removing following pages: ${pagesToBeRemoved.toString()}`
                   );
 
-                pagestoBeRemoved.forEach((pageKey) => {
+                pagesToBeRemoved.forEach((pageKey) => {
                   app.pages.splice(
                     app.pages.findIndex(({ key }) => key === pageKey),
                     1
@@ -124,7 +127,7 @@ export const blogPlugin =
               }
 
               // prepare pages entry
-              if (pagestoBeRemoved.length || pagestoBeAdded.length) {
+              if (pagesToBeRemoved.length || pagesToBeAdded.length) {
                 await preparePagesComponents(app);
                 await preparePagesData(app);
                 await preparePagesRoutes(app);

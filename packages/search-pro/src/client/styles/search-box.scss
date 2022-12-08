@@ -14,6 +14,12 @@
 
   cursor: pointer;
 
+  transition: background var(--color-transition), color var(--color-transition);
+
+  @media print {
+    display: none;
+  }
+
   .search-icon {
     display: block;
     width: 20px;

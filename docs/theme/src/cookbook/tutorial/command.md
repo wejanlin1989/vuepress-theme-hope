@@ -25,9 +25,9 @@ If you are using the VuePress Theme Hope template, you can find the following th
 ```json
 {
   "scripts": {
-    "docs:build": "vuepress build docs",
-    "docs:clean-dev": "vuepress dev docs --clean-cache",
-    "docs:dev": "vuepress dev docs"
+    "docs:build": "vuepress build src",
+    "docs:clean-dev": "vuepress dev src --clean-cache",
+    "docs:dev": "vuepress dev src"
   }
 }
 ```
@@ -55,7 +55,7 @@ If you need to upgrade your theme and VuePress version, execute the following co
 @tab pnpm
 
 ```bash
-pnpm add @vuepress/client@next vuepress@next vuepress-theme-hope@next && pnpm i && pnpm up
+pnpm add @vuepress/client@next vue vuepress@next vuepress-theme-hope@next && pnpm i && pnpm up
 ```
 
 @tab yarn
@@ -69,5 +69,13 @@ yarn add vuepress@next vuepress-theme-hope@next && yarn install && yarn upgrade
 ```bash
 npm i vuepress@next vuepress-theme-hope@next && npm install && npm update
 ```
+
+:::
+
+::: warning
+
+Any official plugins starting with `@vuepress/plugin-` should be the same version as VuePress.
+
+If you're using another third-party plugin, make sure it's compatible with the version of VuePress you're upgrading to.
 
 :::

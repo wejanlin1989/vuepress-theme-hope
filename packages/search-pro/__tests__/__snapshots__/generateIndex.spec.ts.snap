@@ -30,11 +30,6 @@ exports[`generateIndex > Should generate full index 2`] = `
   "contents": [
     {
       "contents": [],
-      "header": "Heading 1",
-      "slug": "heading-1",
-    },
-    {
-      "contents": [],
       "header": "Heading 2",
       "slug": "heading-2",
     },
@@ -230,11 +225,6 @@ exports[`generateIndex > Should generate index 2`] = `
   "contents": [
     {
       "contents": [],
-      "header": "Heading 1",
-      "slug": "heading-1",
-    },
-    {
-      "contents": [],
       "header": "Heading 2",
       "slug": "heading-2",
     },
@@ -351,7 +341,7 @@ exports[`generateIndex > Should support customFields 1`] = `
     },
   ],
   "customFields": {
-    "tag": [
+    "0": [
       "Demo",
     ],
   },
@@ -362,11 +352,6 @@ exports[`generateIndex > Should support customFields 1`] = `
 exports[`generateIndex > Should support customFields 2`] = `
 {
   "contents": [
-    {
-      "contents": [],
-      "header": "Heading 1",
-      "slug": "heading-1",
-    },
     {
       "contents": [],
       "header": "Heading 2",
@@ -461,7 +446,7 @@ exports[`generateIndex > Should support customFields 3`] = `
 {
   "contents": [],
   "customFields": {
-    "tag": [
+    "0": [
       "markdown",
     ],
   },
@@ -473,7 +458,7 @@ exports[`generateIndex > Should support customFields 4`] = `
 {
   "contents": [],
   "customFields": {
-    "tag": [
+    "0": [
       "markdown",
     ],
   },
@@ -505,7 +490,7 @@ exports[`generateIndex > Should support customFields with full index 1`] = `
     },
   ],
   "customFields": {
-    "tag": [
+    "0": [
       "Demo",
     ],
   },
@@ -516,11 +501,6 @@ exports[`generateIndex > Should support customFields with full index 1`] = `
 exports[`generateIndex > Should support customFields with full index 2`] = `
 {
   "contents": [
-    {
-      "contents": [],
-      "header": "Heading 1",
-      "slug": "heading-1",
-    },
     {
       "contents": [],
       "header": "Heading 2",
@@ -678,7 +658,7 @@ exports[`generateIndex > Should support customFields with full index 3`] = `
     },
   ],
   "customFields": {
-    "tag": [
+    "0": [
       "markdown",
     ],
   },
@@ -698,7 +678,7 @@ exports[`generateIndex > Should support customFields with full index 4`] = `
     },
   ],
   "customFields": {
-    "tag": [
+    "0": [
       "markdown",
     ],
   },

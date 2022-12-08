@@ -10,16 +10,16 @@ import { SlideDownIcon } from "./icons/icons.js";
 import defaultHeroBgImagePath from "../assets/hero.jpg";
 
 import type { VNode } from "vue";
-import type { HopeThemeBlogHomePageFrontmatter } from "../../../../shared/index.js";
+import type { ThemeBlogHomePageFrontmatter } from "../../../../shared/index.js";
 
 import "../styles/blog-hero.scss";
 
 export default defineComponent({
   name: "BlogHero",
 
-  setup(_props, { slots }) {
+  setup() {
     const title = usePageHeadTitle();
-    const frontmatter = usePageFrontmatter<HopeThemeBlogHomePageFrontmatter>();
+    const frontmatter = usePageFrontmatter<ThemeBlogHomePageFrontmatter>();
 
     const hero = ref<HTMLElement>();
     const heroImage = computed(() => frontmatter.value.heroImage || null);
@@ -80,17 +80,16 @@ export default defineComponent({
                     },
                   })
                 : null,
-              slots["heroImage"]?.() ||
-                h(DropTransition, { appear: true, delay: 0.04 }, () =>
-                  heroImage.value
-                    ? h("img", {
-                        class: "hero-image",
-                        style: heroImageStyle.value,
-                        src: withBase(heroImage.value),
-                        alt: frontmatter.value.heroAlt || "hero image",
-                      })
-                    : null
-                ),
+              h(DropTransition, { appear: true, delay: 0.04 }, () =>
+                heroImage.value
+                  ? h("img", {
+                      class: "hero-image",
+                      style: heroImageStyle.value,
+                      src: withBase(heroImage.value),
+                      alt: frontmatter.value.heroAlt || "hero image",
+                    })
+                  : null
+              ),
               h(DropTransition, { appear: true, delay: 0.08 }, () =>
                 frontmatter.value.heroText !== false
                   ? h("h1", frontmatter.value.heroText || title.value)

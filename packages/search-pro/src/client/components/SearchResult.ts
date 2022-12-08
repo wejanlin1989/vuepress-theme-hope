@@ -1,10 +1,25 @@
 import { useRouteLocale } from "@vuepress/client";
 import { useEventListener } from "@vueuse/core";
-import { computed, defineComponent, h, onMounted, ref, toRef } from "vue";
+import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
+import {
+  computed,
+  defineComponent,
+  h,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  toRef,
+} from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import { useLocaleConfig } from "vuepress-shared/client";
 
-import { HeadingIcon, HeartIcon, HistoryIcon, TitleIcon } from "./icons.js";
+import {
+  CloseIcon,
+  HeadingIcon,
+  HeartIcon,
+  HistoryIcon,
+  TitleIcon,
+} from "./icons.js";
 import { useSearchHistory, useSearchResults } from "../composables/index.js";
 import {
   searchProClientCustomFiledConfig,
@@ -20,26 +35,36 @@ export default defineComponent({
   name: "SearchResult",
 
   props: {
+    /**
+     * Query string
+     *
+     * 查询字符串
+     */
     query: {
       type: String,
       required: true,
     },
   },
 
-  emits: ["close", "updateQuery"],
+  emits: {
+    close: () => true,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    updateQuery: (_query: string) => true,
+  },
 
   setup(props, { emit }) {
     const router = useRouter();
     const route = useRoute();
     const routeLocale = useRouteLocale();
     const locale = useLocaleConfig(searchProLocales);
-    const { history, addHistory } = useSearchHistory();
+    const { history, addHistory, removeHistory } = useSearchHistory();
 
     const query = toRef(props, "query");
     const searchResults = useSearchResults(query);
 
     const activatedResultIndex = ref(0);
     const activatedResultContentIndex = ref(0);
+    const searchResult = ref<HTMLElement>();
 
     const hasResults = computed(() => searchResults.value.length > 0);
     const activatedResult = computed(
@@ -88,7 +113,7 @@ export default defineComponent({
     const getDisplay = (matchedItem: MatchedItem): (VNode | string)[] => {
       if (matchedItem.type === "custom") {
         const formatterConfig =
-          searchProClientCustomFiledConfig[matchedItem.name] || "$content";
+          searchProClientCustomFiledConfig[matchedItem.index] || "$content";
 
         const [prefix, suffix = ""] =
           typeof formatterConfig === "object"
@@ -101,6 +126,13 @@ export default defineComponent({
       return getVNodes(matchedItem.display);
     };
 
+    const resetSearchResult = (): void => {
+      activatedResultIndex.value = 0;
+      activatedResultContentIndex.value = 0;
+      emit("updateQuery", "");
+      emit("close");
+    };
+
     onMounted(() => {
       useEventListener("keydown", (event: KeyboardEvent) => {
         if (!hasResults.value) return;
@@ -108,68 +140,51 @@ export default defineComponent({
         if (event.key === "ArrowUp") activePreviousResultContent();
         else if (event.key === "ArrowDown") activeNextResultContent();
         else if (event.key === "Enter") {
-          const path =
-            activatedResult.value.contents[activatedResultContentIndex.value]
-              .path;
+          const item =
+            activatedResult.value.contents[activatedResultContentIndex.value];
 
-          if (route.path !== path) {
-            void router.push(path);
-            addHistory(query.value);
-            emit("updateQuery", "");
-            emit("close");
+          if (route.path !== item.path) {
+            addHistory(item);
+            void router.push(item.path);
+            resetSearchResult();
           }
         }
       });
+
+      disableBodyScroll(searchResult.value!, { reserveScrollBarGap: true });
+    });
+
+    onBeforeUnmount(() => {
+      clearAllBodyScrollLocks();
     });
 
     return (): VNode =>
-      query.value === ""
-        ? h(
-            "ul",
-            { class: "search-pro-result-list" },
-            history.value.map((history) =>
-              h(
-                "li",
-                { class: "search-pro-result-list-item" },
-                h(
-                  "div",
-                  {
-                    class: "search-pro-result-item",
-                    onClick: () => {
-                      emit("updateQuery", history);
-                    },
-                  },
-                  [
-                    h(HistoryIcon, { class: "search-pro-result-type" }),
-                    h("div", { class: "search-pro-result-content" }, history),
-                  ]
-                )
-              )
-            )
-          )
-        : hasResults.value
-        ? h(
-            "ul",
-            { class: "search-pro-result-list" },
-            searchResults.value.map(({ title, contents }, index) => {
-              const isCurrentResultActive =
-                activatedResultIndex.value === index;
-
-              return h(
-                "li",
-                {
-                  class: [
-                    "search-pro-result-list-item",
-                    { active: isCurrentResultActive },
-                  ],
-                },
-                [
+      h(
+        "div",
+        {
+          class: [
+            "search-pro-result",
+            {
+              empty:
+                query.value === ""
+                  ? history.value.length === 0
+                  : !hasResults.value,
+            },
+          ],
+          ref: searchResult,
+        },
+        query.value === ""
+          ? history.value.length
+            ? h(
+                "ul",
+                { class: "search-pro-result-list" },
+                h("li", { class: "search-pro-result-list-item" }, [
                   h(
                     "div",
                     { class: "search-pro-result-title" },
-                    title || "Documentation"
+                    locale.value.history
                   ),
-                  contents.map((item, contentIndex) =>
+                  history.value.map((item, historyIndex) =>
                     h(
                       RouterLink,
                       {
@@ -178,45 +193,113 @@ export default defineComponent({
                           "search-pro-result-item",
                           {
                             active:
-                              isCurrentResultActive &&
                               activatedResultContentIndex.value ===
-                                contentIndex,
+                              historyIndex,
                           },
                         ],
                         onClick: () => {
-                          addHistory(query.value);
-                          emit("updateQuery", "");
-                          emit("close");
+                          console.log("click");
+                          resetSearchResult();
                         },
                       },
                       () => [
-                        item.type === "content"
-                          ? null
-                          : h(
-                              item.type === "title"
-                                ? TitleIcon
-                                : item.type === "heading"
-                                ? HeadingIcon
-                                : HeartIcon,
-                              { class: "search-pro-result-type" }
-                            ),
+                        h(HistoryIcon, { class: "search-pro-result-type" }),
                         h("div", { class: "search-pro-result-content" }, [
-                          item.type === "content"
+                          item.type === "content" && item.header
                             ? h("div", { class: "content-header" }, item.header)
                             : null,
                           h("div", getDisplay(item)),
                         ]),
+                        h(
+                          "button",
+                          {
+                            class: "search-pro-close-icon",
+                            onClick: (event: Event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              removeHistory(historyIndex);
+                            },
+                          },
+                          h(CloseIcon)
+                        ),
                       ]
                     )
                   ),
-                ]
-              );
-            })
-          )
-        : h(
-            "div",
-            { class: "search-pro-result-list empty" },
-            locale.value.empty
-          );
+                ])
+              )
+            : locale.value.emptyHistory
+          : hasResults.value
+          ? h(
+              "ul",
+              { class: "search-pro-result-list" },
+              searchResults.value.map(({ title, contents }, index) => {
+                const isCurrentResultActive =
+                  activatedResultIndex.value === index;
+
+                return h(
+                  "li",
+                  {
+                    class: [
+                      "search-pro-result-list-item",
+                      { active: isCurrentResultActive },
+                    ],
+                  },
+                  [
+                    h(
+                      "div",
+                      { class: "search-pro-result-title" },
+                      title || "Documentation"
+                    ),
+                    contents.map((item, contentIndex) => {
+                      const isCurrentContentActive =
+                        isCurrentResultActive &&
+                        activatedResultContentIndex.value === contentIndex;
+
+                      return h(
+                        RouterLink,
+                        {
+                          to: item.path,
+                          class: [
+                            "search-pro-result-item",
+                            {
+                              active: isCurrentContentActive,
+                              "aria-selected": isCurrentContentActive,
+                            },
+                          ],
+                          onClick: () => {
+                            addHistory(item);
+                            resetSearchResult();
+                          },
+                        },
+                        () => [
+                          item.type === "content"
+                            ? null
+                            : h(
+                                item.type === "title"
+                                  ? TitleIcon
+                                  : item.type === "heading"
+                                  ? HeadingIcon
+                                  : HeartIcon,
+                                { class: "search-pro-result-type" }
+                              ),
+                          h("div", { class: "search-pro-result-content" }, [
+                            item.type === "content" && item.header
+                              ? h(
+                                  "div",
+                                  { class: "content-header" },
+                                  item.header
+                                )
+                              : null,
+                            h("div", getDisplay(item)),
+                          ]),
+                        ]
+                      );
+                    }),
+                  ]
+                );
+              })
+            )
+          : locale.value.emptyResult
+      );
   },
 });

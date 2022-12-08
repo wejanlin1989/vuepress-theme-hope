@@ -4,24 +4,22 @@ import { getAuthor } from "vuepress-shared/node";
 import type { Page, Plugin } from "@vuepress/core";
 import type { CopyrightOptions } from "vuepress-plugin-copyright2";
 import type {
-  HopeThemeConfig,
-  HopeThemeNormalPageFrontmatter,
+  ThemeData,
+  ThemeNormalPageFrontmatter,
 } from "../../shared/index.js";
 
 export const getCopyrightPlugin = (
-  themeConfig: HopeThemeConfig,
-  options?: Partial<CopyrightOptions> | true,
+  themeData: ThemeData,
+  options?: Partial<CopyrightOptions> | boolean,
   hostname?: string
 ): Plugin | null => {
   if (!options) return null;
 
   return copyrightPlugin(<CopyrightOptions>{
     hostname,
-    author: (
-      page: Page<Record<string, never>, HopeThemeNormalPageFrontmatter>
-    ) =>
+    author: (page: Page<Record<string, never>, ThemeNormalPageFrontmatter>) =>
       getAuthor(page.frontmatter.author)?.[0]?.name ||
-      getAuthor(themeConfig.author)?.[0]?.name ||
+      getAuthor(themeData.author)?.[0]?.name ||
       "",
     ...(typeof options === "object" ? options : { global: true }),
   });

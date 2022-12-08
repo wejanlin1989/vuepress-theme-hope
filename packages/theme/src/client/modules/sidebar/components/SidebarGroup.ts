@@ -6,7 +6,7 @@ import SidebarLinks from "@theme-hope/modules/sidebar/components/SidebarLinks.js
 import { isActiveSidebarItem } from "@theme-hope/modules/sidebar/utils/index.js";
 
 import type { PropType, VNode } from "vue";
-import type { ResolvedHopeThemeSidebarGroupItem } from "../../../../shared/index.js";
+import type { ResolvedSidebarGroupItem } from "../utils/index.js";
 
 import "../styles/sidebar-group.scss";
 
@@ -14,14 +14,30 @@ export default defineComponent({
   name: "SidebarGroup",
 
   props: {
+    /**
+     * Sidebar group item config
+     *
+     * 侧边栏分组配置
+     */
     config: {
-      type: Object as PropType<ResolvedHopeThemeSidebarGroupItem>,
+      type: Object as PropType<ResolvedSidebarGroupItem>,
       required: true,
     },
-    open: { type: Boolean, required: true },
+
+    /**
+     * Whether current group is open
+     *
+     * 当前分组是否展开
+     */
+    open: {
+      type: Boolean,
+      required: true,
+    },
   },
 
-  emits: ["toggle"],
+  emits: {
+    toggle: () => true,
+  },
 
   setup(props, { emit }) {
     const route = useRoute();

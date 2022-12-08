@@ -8,9 +8,9 @@ import { isActiveSidebarItem } from "@theme-hope/modules/sidebar/utils/index.js"
 
 import type { PropType, VNode } from "vue";
 import type {
-  ResolvedHopeThemeSidebarHeaderItem,
-  ResolvedHopeThemeSidebarPageItem,
-} from "../../../../shared/index.js";
+  ResolvedSidebarHeaderItem,
+  ResolvedSidebarPageItem,
+} from "../utils/index.js";
 
 import "../styles/sidebar-child.scss";
 
@@ -18,9 +18,15 @@ export default defineComponent({
   name: "SidebarChild",
 
   props: {
+    /**
+     * Sidebar item config
+     *
+     * 侧边栏项目配置
+     */
     config: {
       type: Object as PropType<
-        ResolvedHopeThemeSidebarPageItem | ResolvedHopeThemeSidebarHeaderItem
+        ResolvedSidebarPageItem | ResolvedSidebarHeaderItem
+        // eslint-disable-next-line vue/new-line-between-multi-line-property
       >,
       required: true,
     },

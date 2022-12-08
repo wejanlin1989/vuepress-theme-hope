@@ -22,7 +22,10 @@ import {
 import { useSidebarItems } from "@theme-hope/modules/sidebar/composables/index.js";
 
 import type { DefineComponent, VNode } from "vue";
-import type { HopeThemePageFrontmatter } from "../../shared/index.js";
+import type {
+  ThemeNormalPageFrontmatter,
+  ThemeProjectHomePageFrontmatter,
+} from "../../shared/index.js";
 
 import "../styles/common.scss";
 
@@ -30,22 +33,27 @@ export default defineComponent({
   name: "CommonWrapper",
 
   props: {
-    /** @description Whether enable navbar */
-    navbar: {
-      type: Boolean,
-      default: true,
-    },
-    /** @description Whether enable sidebar */
-    sidebar: {
-      type: Boolean,
-      default: true,
-    },
+    /**
+     * Whether disable navbar
+     *
+     * 是否禁用导航栏
+     */
+    noNavbar: Boolean,
+
+    /**
+     * Whether disable sidebar
+     *
+     * 是否禁用侧边栏
+     */
+    noSidebar: Boolean,
   },
 
   setup(props, { slots }) {
     const router = useRouter();
     const page = usePageData();
-    const frontmatter = usePageFrontmatter<HopeThemePageFrontmatter>();
+    const frontmatter = usePageFrontmatter<
+      ThemeProjectHomePageFrontmatter | ThemeNormalPageFrontmatter
+    >();
     const themeLocale = useThemeLocaleData();
     const isMobile = useMobile();
 
@@ -53,7 +61,7 @@ export default defineComponent({
     const hideNavbar = ref(false);
 
     const enableNavbar = computed(() => {
-      if (props.navbar === false) return false;
+      if (props.noNavbar) return false;
 
       if (
         frontmatter.value.navbar === false ||
@@ -73,7 +81,7 @@ export default defineComponent({
     const sidebarItems = useSidebarItems();
 
     const enableSidebar = computed(() => {
-      if (props.sidebar === false) return false;
+      if (props.noSidebar) return false;
 
       return (
         frontmatter.value.sidebar !== false &&
@@ -112,10 +120,11 @@ export default defineComponent({
       }
     };
 
-    const enableToc = computed(
-      () =>
-        frontmatter.value.toc ||
-        (themeLocale.value.toc !== false && frontmatter.value.toc !== false)
+    const enableToc = computed(() =>
+      frontmatter.value.home
+        ? false
+        : frontmatter.value.toc ||
+          (themeLocale.value.toc !== false && frontmatter.value.toc !== false)
     );
 
     /** Get scroll distance */

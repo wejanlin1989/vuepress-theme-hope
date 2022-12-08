@@ -18,6 +18,10 @@ export default defineComponent({
      * @description Transition duration
      */
     duration: { type: Number, default: 0.25 },
+
+    /**
+     * @description appear
+     */
     appear: Boolean,
   },
 
@@ -35,7 +39,6 @@ export default defineComponent({
 
     return (): VNode =>
       h(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         props.type === "single" ? Transition : TransitionGroup,
         {

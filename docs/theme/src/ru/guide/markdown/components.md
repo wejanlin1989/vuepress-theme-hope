@@ -23,9 +23,66 @@ tag:
 
 По умолчанию `<Badge />` и `<FontIcon />` включены.
 
-Чтобы включить компоненты, вы должны установить `plugin.components` с массивом имен компонентов.
+Чтобы включить компоненты, вы должны установить `plugin.components.components` с массивом имен компонентов.
 
 <!-- more -->
+
+::: code-tabs#language
+
+@tab TS
+
+```ts {8-10}
+// .vuepress/config.ts
+import { defineUserConfig } from "vuepress";
+import { hopeTheme } from "vuepress-theme-hope";
+
+export default defineUserConfig({
+  theme: hopeTheme({
+    plugins: {
+      components: {
+        // components you want
+        components: [
+          "Badge",
+          "BiliBili",
+          "CodePen",
+          "PDF",
+          "StackBlitz",
+          "VideoPlayer",
+          "YouTube",
+        ],
+      },
+    },
+  }),
+});
+```
+
+@tab JS
+
+```js {7-9}
+// .vuepress/config.js
+import { hopeTheme } from "vuepress-theme-hope";
+
+export default {
+  theme: hopeTheme({
+    plugins: {
+      components: {
+        // components you want
+        components: [
+          "Badge",
+          "BiliBili",
+          "CodePen",
+          "PDF",
+          "StackBlitz",
+          "VideoPlayer",
+          "YouTube",
+        ],
+      },
+    },
+  }),
+};
+```
+
+:::
 
 ## Значок
 
@@ -61,10 +118,10 @@ tag:
 
 Видео bilibili с пользовательскими настройками:
 
-<BiliBili bvid="BV1kt411o7C3" :high-quality="false" :danmaku="false" />
+<BiliBili bvid="BV1kt411o7C3" low-quality no-danmaku />
 
 ```md
-<BiliBili bvid="BV1kt411o7C3" :high-quality="false" :danmaku="false" />
+<BiliBili bvid="BV1kt411o7C3" low-quality no-danmaku />
 ```
 
 Смотрите страницу [BiliBili][bilibili] для доступных свойств.
@@ -144,10 +201,10 @@ tag:
 
 Просмотрщик PDF без панели инструментов:
 
-<PDF url="/sample.pdf" :toolbar="false" />
+<PDF url="/sample.pdf" no-toolbar />
 
 ```md
-<PDF url="/sample.pdf" :toolbar="false" />
+<PDF url="/sample.pdf" no-toolbar />
 ```
 
 Просмотрщик PDF с начальной страницей 2:
@@ -174,10 +231,10 @@ tag:
 
 Проект StackBlitz с пользовательскими настройками:
 
-<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hidedevtools />
+<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hideDevtools />
 
 ```md
-<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hidedevtools />
+<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hideDevtools />
 ```
 
 Доступные свойства смотрите на странице [StackBlitz][stackblitz].

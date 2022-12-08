@@ -16,16 +16,20 @@ import RepoLink from "@theme-hope/modules/navbar/components/RepoLink.js";
 
 import type { VNode } from "vue";
 import type {
-  HopeThemeNavbarComponent,
-  HopeThemeNavbarLocaleOptions,
+  NavbarComponent,
+  NavbarLocaleOptions,
 } from "../../../../shared/index.js";
 
 import "../styles/navbar.scss";
 
+declare const HAS_MULTIPLE_LANGUAGES: boolean;
+
 export default defineComponent({
   name: "NavBar",
 
-  emits: ["toggle-sidebar"],
+  emits: {
+    toggleSidebar: () => true,
+  },
 
   setup(_props, { emit, slots }) {
     const themeLocale = useThemeLocaleData();
@@ -43,7 +47,7 @@ export default defineComponent({
     });
 
     const navbarLayout = computed<
-      Exclude<HopeThemeNavbarLocaleOptions["navbarLayout"], undefined>
+      Exclude<NavbarLocaleOptions["navbarLayout"], undefined>
     >(
       () =>
         themeLocale.value.navbarLayout || {
@@ -54,9 +58,9 @@ export default defineComponent({
     );
 
     return (): VNode[] => {
-      const map: Record<HopeThemeNavbarComponent, VNode | null> = {
+      const map: Record<NavbarComponent, VNode | null> = {
         Brand: h(NavbarBrand),
-        Language: h(LanguageDropdown),
+        Language: HAS_MULTIPLE_LANGUAGES ? h(LanguageDropdown) : null,
         Links: h(NavbarLinks),
         Repo: h(RepoLink),
         Outlook: h(OutlookButton),
@@ -83,12 +87,11 @@ export default defineComponent({
           },
           [
             h("div", { class: "navbar-left" }, [
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               h(ToggleSidebarButton, {
                 onToggle: () => {
                   if (showScreen.value) showScreen.value = false;
-                  emit("toggle-sidebar");
+                  emit("toggleSidebar");
                 },
               }),
               slots["leftStart"]?.(),
@@ -119,7 +122,7 @@ export default defineComponent({
         h(
           NavScreen,
           {
-            active: showScreen.value,
+            show: showScreen.value,
             onClose: () => {
               showScreen.value = false;
             },

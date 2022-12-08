@@ -22,10 +22,16 @@ For instructions, please see [Blog Intro](../../guide/blog/intro.md).
 
 ### autoExcerpt
 
-- Type: `boolean`
+- Type: `number | boolean`
 - Default: `false`
 
-Whether to generate excerpt for every page.
+Whether to generate excerpt for every page. Number value means excerpt length (default is `200`).
+
+::: warning Limitation
+
+Auto excerpt is not available in devServer by default, [see reasons and how to enable it](../theme/basic.md#hotreload).
+
+:::
 
 ### filter
 
@@ -98,3 +104,10 @@ Star article list route path.
 - Default: `/timeline/`
 
 Timeline list route path.
+
+### hotReload
+
+- Type: `boolean`
+- Default: Whether using `--debug` flag
+
+Whether to enable hot reload in the development server.

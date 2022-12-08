@@ -8,7 +8,7 @@ actions:
   - text: Docs
     link: https://vuepress-theme-hope.github.io/v2/photo-swipe/
 
-footer: MIT Licensed | Copyright © 2019-present Mr.Hope
+footer: MIT Licensed, Copyright © 2019-present Mr.Hope
 ---
 
 This is a paragraph.

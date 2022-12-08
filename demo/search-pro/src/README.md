@@ -9,7 +9,7 @@ actions:
   - text: Docs
     link: https://vuepress-theme-hope.github.io/v2/search-pro/
 
-footer: MIT Licensed | Copyright © 2019-present Mr.Hope
+footer: MIT Licensed, Copyright © 2019-present Mr.Hope
 ---
 
 ## How to use

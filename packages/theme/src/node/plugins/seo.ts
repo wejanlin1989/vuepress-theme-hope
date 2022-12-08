@@ -2,21 +2,19 @@ import { seoPlugin } from "vuepress-plugin-seo2";
 import { getBlogOptions } from "./blog.js";
 
 import type { Page, Plugin } from "@vuepress/core";
-import type {
-  HopeThemeConfig,
-  HopeThemePluginsOptions,
-} from "../../shared/index.js";
+import type { ThemeData, PluginsOptions } from "../../shared/index.js";
 
 export const getSEOPlugin = (
-  themeConfig: HopeThemeConfig,
-  { blog, seo }: HopeThemePluginsOptions,
+  themeData: ThemeData,
+  { blog, seo }: PluginsOptions,
   hostname = "",
   legacy = false
 ): Plugin | null => {
   if (seo === false) return null;
+  const seoOptions = typeof seo === "object" ? seo : {};
 
   // disable seo if `hostname` is not set and no options for seo plugin
-  if (!Object.keys(seo || {}).length && !hostname) return null;
+  if (!Object.keys(seoOptions).length && !hostname) return null;
 
   const blogOptions = getBlogOptions(blog);
 
@@ -40,9 +38,9 @@ export const getSEOPlugin = (
   return seoPlugin(
     {
       hostname,
-      ...(themeConfig.author ? { author: themeConfig.author } : {}),
+      ...(themeData.author ? { author: themeData.author } : {}),
       isArticle,
-      ...(seo || {}),
+      ...seoOptions,
     },
     legacy
   );

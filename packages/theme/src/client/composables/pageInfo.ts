@@ -1,5 +1,5 @@
 import { usePageData, usePageFrontmatter } from "@vuepress/client";
-import { computed, inject, reactive } from "vue";
+import { computed, inject } from "vue";
 import {
   getAuthor,
   getCategory,
@@ -24,12 +24,11 @@ import type {
   PageTag,
 } from "@theme-hope/modules/info/utils/index.js";
 import type {
-  HopeThemeNormalPageFrontmatter,
+  ThemeNormalPageFrontmatter,
   PageInfo,
 } from "../../shared/index.js";
 
 declare const ENABLE_BLOG: boolean;
-declare const SUPPORT_PAGEVIEW: boolean;
 
 export const usePageAuthor = (): ComputedRef<AuthorInfo[]> => {
   const themeLocale = useThemeLocaleData();
@@ -93,35 +92,32 @@ export const usePageDate = (): ComputedRef<DateInfo | null> => {
 };
 
 export const usePageInfo = (): {
-  config: PageInfoProps;
+  info: ComputedRef<PageInfoProps>;
   items: ComputedRef<PageInfo[] | false | null>;
 } => {
   const themeLocale = useThemeLocaleData();
   const page = usePageData<{
     git?: GitData;
     localizedDate: string;
-    readingTime: ReadingTime;
+    readingTime?: ReadingTime;
   }>();
-  const frontmatter = usePageFrontmatter<HopeThemeNormalPageFrontmatter>();
+  const frontmatter = usePageFrontmatter<ThemeNormalPageFrontmatter>();
   const author = usePageAuthor();
   const category = usePageCategory();
   const tag = usePageTag();
   const date = usePageDate();
 
-  const config = reactive<PageInfoProps>({
+  const info = computed<PageInfoProps>(() => ({
     author: author.value,
     category: category.value,
     date: date.value,
     localizedDate: page.value.localizedDate,
     tag: tag.value,
     isOriginal: frontmatter.value.isOriginal || false,
-    readingTime: page.value.readingTime,
-    pageview: SUPPORT_PAGEVIEW
-      ? "pageview" in frontmatter.value
-        ? frontmatter.value.pageview
-        : true
-      : false,
-  });
+    readingTime: page.value.readingTime || null,
+    pageview:
+      "pageview" in frontmatter.value ? frontmatter.value.pageview : true,
+  }));
 
   const items = computed(() =>
     "pageInfo" in frontmatter.value
@@ -131,5 +127,5 @@ export const usePageInfo = (): {
       : null
   );
 
-  return { config, items };
+  return { info, items };
 };

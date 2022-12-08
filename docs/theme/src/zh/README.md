@@ -3,12 +3,15 @@ home: true
 title: 主页
 icon: home
 heroImage: /logo.svg
-heroText: vuepress-theme-hope
+heroText: VuePress Theme Hope
 tagline: 一个具有强大功能的 vuepress 主题✨
 actions:
-  - text: 快速上手 💡
-    link: /zh/guide/
+  - text: 使用教程 🧭
+    link: /zh/cookbook/tutorial/
     type: primary
+
+  - text: 介绍 💡
+    link: /zh/guide/get-started/intro.html
 
   - text: 配置 🛠
     link: /zh/config/
@@ -67,7 +70,12 @@ features:
     details: 你可以为你的特定页面或特定目录进行加密，以便陌生人不能随意访问它们
     link: /zh/guide/feature/encrypt.html
 
-  - title: 复制按钮
+  - title: 搜索支持
+    icon: search
+    details: 支持 docsearch 和基于客户端的搜索
+    link: /zh/guide/feature/search.html
+
+  - title: 代码复制
     icon: copy
     details: 一键复制代码块中的代码
     link: /zh/guide/feature/copy-code.html
@@ -108,7 +116,7 @@ footer: MIT Licensed | Copyright © 2019-present Mr.Hope
 
 ## 🛠 安装
 
-在当前项目的 `[dir]` 文件夹内创建 vuepress-theme-hope 项目:
+在当前目录下的 `[dir]` 文件夹内创建 vuepress-theme-hope 项目:
 
 ::: code-tabs#shell
 

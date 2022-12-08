@@ -4,6 +4,8 @@ title: BiliBili
 
 在 Markdown 文件中嵌入 B 站视频。
 
+<!-- more -->
+
 ## 属性
 
 ### bvid
@@ -48,10 +50,17 @@ B 站组件高度宽高比，只有当未指定 `height` 时有效。
 
 视频开始时间 (单位: 秒)。
 
-### danmaku
+### lowQuality
 
 - 类型: `boolean`
-- 默认值: `true`
+- 默认值: `false`
+
+是否使用低质量画质
+
+### noDanmaku
+
+- 类型: `boolean`
+- 默认值: `false`
 
 是否启用弹幕
 
@@ -75,8 +84,8 @@ B 站组件高度宽高比，只有当未指定 `height` 时有效。
 
 一个自定义设置的 B 站视频:
 
-<BiliBili bvid="BV1kt411o7C3" :auto-height="[9 / 16, 20]" :high-quality="false" :danmaku="false" />
+<BiliBili bvid="BV1kt411o7C3" :auto-height="[9 / 16, 20]" low-quality no-danmaku />
 
 ```md
-<BiliBili bvid="BV1kt411o7C3" :auto-height="[9 / 16, 20]" :high-quality="false" :danmaku="false" />
+<BiliBili bvid="BV1kt411o7C3" :auto-height="[9 / 16, 20]" low-quality no-danmaku />
 ```

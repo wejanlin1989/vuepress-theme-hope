@@ -27,7 +27,7 @@ tag:
 
 :::
 
-### blog.name
+### blog\.name
 
 - Тип: `string`
 - По умолчанию: `author`
@@ -159,6 +159,12 @@ tag:
 - `"Tag"`
 - `"ReadingTime"`
 - `"Word"`
+
+::: warning Limitation
+
+ReadingTime and Word are not available in devServer by default, [see reasons and how to enable it](./basic.md#hotreload).
+
+:::
 
 ## Зашифровать конфигурацию <Badge text="Только root" type="warning" />
 

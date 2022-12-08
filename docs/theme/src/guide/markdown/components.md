@@ -20,11 +20,69 @@ Available components:
 - StackBlitz
 - VideoPlayer
 - YouTube
-  By default, `<Badge />` and `<FontIcon />` is enabled.
 
-To enable components, you should set `plugin.components` with an array of components name.
+By default, `<Badge />` and `<FontIcon />` is enabled.
+
+To enable components, you should set `plugin.components.components` with an array of components name.
 
 <!-- more -->
+
+::: code-tabs#language
+
+@tab TS
+
+```ts {8-10}
+// .vuepress/config.ts
+import { defineUserConfig } from "vuepress";
+import { hopeTheme } from "vuepress-theme-hope";
+
+export default defineUserConfig({
+  theme: hopeTheme({
+    plugins: {
+      components: {
+        // components you want
+        components: [
+          "Badge",
+          "BiliBili",
+          "CodePen",
+          "PDF",
+          "StackBlitz",
+          "VideoPlayer",
+          "YouTube",
+        ],
+      },
+    },
+  }),
+});
+```
+
+@tab JS
+
+```js {7-9}
+// .vuepress/config.js
+import { hopeTheme } from "vuepress-theme-hope";
+
+export default {
+  theme: hopeTheme({
+    plugins: {
+      components: {
+        // components you want
+        components: [
+          "Badge",
+          "BiliBili",
+          "CodePen",
+          "PDF",
+          "StackBlitz",
+          "VideoPlayer",
+          "YouTube",
+        ],
+      },
+    },
+  }),
+};
+```
+
+:::
 
 ## Badge
 
@@ -60,10 +118,10 @@ A bilibili video with start time and page:
 
 A bilibili video with custom settings:
 
-<BiliBili bvid="BV1kt411o7C3" :high-quality="false" :danmaku="false" />
+<BiliBili bvid="BV1kt411o7C3" low-quality no-danmaku />
 
 ```md
-<BiliBili bvid="BV1kt411o7C3" :high-quality="false" :danmaku="false" />
+<BiliBili bvid="BV1kt411o7C3" low-quality no-danmaku />
 ```
 
 See [BiliBili][bilibili] page for available props.
@@ -143,10 +201,10 @@ Default PDF viewer:
 
 PDF viewer without toolbar:
 
-<PDF url="/sample.pdf" :toolbar="false" />
+<PDF url="/sample.pdf" no-toolbar />
 
 ```md
-<PDF url="/sample.pdf" :toolbar="false" />
+<PDF url="/sample.pdf" no-toolbar />
 ```
 
 PDF viewer with initial page 2:
@@ -173,10 +231,10 @@ A StackBlitz project:
 
 A StackBlitz project with custom settings:
 
-<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hidedevtools />
+<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hideDevtools />
 
 ```md
-<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hidedevtools />
+<StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hideDevtools />
 ```
 
 See [StackBlitz][stackblitz] page for available props.

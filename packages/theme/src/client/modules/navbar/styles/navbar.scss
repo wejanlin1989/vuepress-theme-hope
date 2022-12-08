@@ -29,6 +29,10 @@
 
   backdrop-filter: saturate(150%) blur(12px);
 
+  @media print {
+    display: none;
+  }
+
   .hide-navbar &.auto-hide {
     transform: translateY(-100%);
   }
@@ -56,6 +60,7 @@
 .navbar-right,
 .navbar-center {
   display: flex;
+  flex: 1;
   align-items: center;
 
   > * {
@@ -70,6 +75,18 @@
       margin-right: 0 !important;
     }
   }
+}
+
+.navbar-left {
+  justify-content: start;
+}
+
+.navbar-center {
+  justify-content: center;
+}
+
+.navbar-right {
+  justify-content: end;
 }
 
 // docsearch fix

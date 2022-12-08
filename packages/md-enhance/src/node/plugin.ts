@@ -29,6 +29,7 @@ import {
   chart,
   codeTabs,
   echarts,
+  figure,
   flowchart,
   footnote,
   hint,
@@ -54,7 +55,6 @@ import {
   vuePlayground,
   getVuePlaygroundPreset,
   getTSPlaygroundPreset,
-  imageTitle,
 } from "./markdown-it/index.js";
 import { prepareConfigFile, prepareRevealPluginFile } from "./prepare.js";
 import { MATHML_TAGS } from "./utils.js";
@@ -128,7 +128,7 @@ export const mdEnhancePlugin =
 
     useSassPalettePlugin(app, { id: "hope" });
 
-    let initialized = false;
+    let isAppInitialized = false;
 
     return {
       name: "vuepress-plugin-md-enhance",
@@ -242,7 +242,7 @@ export const mdEnhancePlugin =
         if (getStatus("align")) md.use(align);
         if (getStatus("container")) md.use(hint, locales);
         if (getStatus("imageLazyload")) md.use(imageLazyload);
-        if (getStatus("imageTitle")) md.use(imageTitle);
+        if (getStatus("figure")) md.use(figure);
         if (imageMarkEnable)
           md.use(
             imageMark,
@@ -317,11 +317,11 @@ export const mdEnhancePlugin =
       },
 
       extendsPage: (page, app): void => {
-        if (shouldCheckLinks && initialized) checkLinks(page, app);
+        if (shouldCheckLinks && isAppInitialized) checkLinks(page, app);
       },
 
       onInitialized: async (app): Promise<void> => {
-        initialized = true;
+        isAppInitialized = true;
         if (shouldCheckLinks)
           app.pages.forEach((page) => checkLinks(page, app));
 
